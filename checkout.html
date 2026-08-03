@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — OIStride</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container">
+    <a href="index.html" class="nav-logo"><img src="assets/img/logo.png" alt="OIStride"></a>
+    <div class="nav-cta" style="margin-left:auto;">
+      <a href="index.html" class="btn btn-outline btn-sm">← Back Home</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-hero" style="padding-bottom:40px;">
+  <div class="container text-center">
+    <span class="eyebrow" style="justify-content:center;">Secure Checkout</span>
+    <h1 id="co-title">Complete Your Enrollment</h1>
+    <p class="lead" style="margin-left:auto; margin-right:auto;">You're one step from your seat. Payment is processed securely — you'll get an email confirmation and community access right after.</p>
+  </div>
+</header>
+
+<section class="section" style="padding-top:0;">
+  <div class="container two-col" style="align-items:start;">
+
+    <div class="form-card reveal">
+      <h3 style="font-size:17px; margin-bottom:22px;">Your Details</h3>
+      <form data-demo-form="thank-you.html?type=payment">
+        <div class="honeypot"><input type="text" name="company" tabindex="-1" autocomplete="off"></div>
+        <div class="form-grid-2">
+          <div class="form-row"><label>Full name</label><input type="text" required></div>
+          <div class="form-row"><label>Email</label><input type="email" required></div>
+        </div>
+        <div class="form-row"><label>Phone / WhatsApp</label><input type="tel" required></div>
+
+        <div id="cohort-field" class="form-row hidden">
+          <label>Choose your cohort</label>
+          <select id="cohort-choice">
+            <option>November 2026</option>
+            <option>December 2026</option>
+            <option>January 2027</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label>Payment method</label>
+          <select>
+            <option>Card (Stripe)</option>
+            <option>Card / Bank Transfer (Paystack)</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top:8px;">Pay &amp; Confirm Enrollment</button>
+        <p style="font-size:12px; color:var(--grey); text-align:center; margin-top:12px;">🔒 Payments are processed securely. This demo form is not yet connected to a live payment processor.</p>
+      </form>
+    </div>
+
+    <div class="sticky-side">
+      <div class="pricing-card reveal">
+        <span class="badge-soft">Order Summary</span>
+        <h3 id="co-program-name" style="margin-top:14px; font-size:19px;">Program</h3>
+
+        <div class="price-toggle" role="tablist">
+          <button type="button" class="active" data-price-tab="full">Pay in Full</button>
+          <button type="button" data-price-tab="split">Pay Monthly</button>
+        </div>
+        <div class="price-detail active" data-price-panel="full">
+          <div class="price-line">[ Price ]</div>
+          <div class="price-note">One payment, secures your seat immediately.</div>
+        </div>
+        <div class="price-detail" data-price-panel="split">
+          <div class="price-line">[ Price ] / mo</div>
+          <div class="price-note">Split across 3 monthly payments — first payment secures your seat.</div>
+        </div>
+
+        <ul class="pricing-features" style="margin-top:24px;">
+          <li>Instant email confirmation</li>
+          <li>Community access unlocked on payment</li>
+          <li>Receipt for your records</li>
+        </ul>
+        <div class="soft-alt">Have questions before you pay? <a href="book-a-call.html">Talk to a career coach</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+const PROGRAMS = {
+  "pm-mastery": { name: "Project & Product Management Mastery", cohort: true },
+  "land-your-first-tech-job": { name: "Land Your First Tech Job", cohort: false },
+  "interview-mastery": { name: "Interview Mastery & Job Search Strategy", cohort: false },
+  "find-your-path": { name: "Find Your Path in Tech", cohort: false },
+  "understanding-ai": { name: "Understanding AI in Today's World", cohort: false },
+  "idea-to-validated-business": { name: "From Idea to Validated Business", cohort: false },
+  "build-and-test-with-ai": { name: "Build & Test Your Idea Fast with AI", cohort: false }
+};
+const params = new URLSearchParams(window.location.search);
+const slug = params.get("program") || "pm-mastery";
+const program = PROGRAMS[slug] || { name: "OIStride Program", cohort: false };
+document.getElementById("co-program-name").textContent = program.name;
+if (program.cohort) {
+  document.getElementById("cohort-field").classList.remove("hidden");
+}
+</script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thank You — OIStride</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<nav class="nav">
+  <div class="container">
+    <a href="index.html" class="nav-logo"><img src="assets/img/logo.png" alt="OIStride"></a>
+  </div>
+</nav>
+
+<section class="section text-center" style="padding-top:110px;">
+  <div class="container" style="max-width:520px;">
+    <div class="reveal">
+      <div style="width:64px; height:64px; border-radius:50%; background:var(--indigo-pale); color:var(--indigo); display:flex; align-items:center; justify-content:center; margin:0 auto 26px; font-size:28px; font-weight:800; font-family:var(--font-display);">✓</div>
+      <h1 id="ty-heading" style="font-size:28px;">You're all set.</h1>
+      <p id="ty-body" style="color:var(--grey); margin-top:14px; font-size:15.5px;">We've received your submission and Jed will follow up shortly.</p>
+      <a id="ty-brochure-link" href="assets/downloads/OIStride_PM_Mastery_Brochure.pdf" class="btn btn-primary hidden" style="margin-top:10px;" download>Download the Brochure (PDF)</a>
+      <div class="hero-actions" style="justify-content:center; margin-top:32px;">
+        <a href="index.html" class="btn btn-outline">Back to Home</a>
+        <a href="book-a-call.html" class="btn btn-primary">Book a Free Consultation</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const type = params.get('type');
+  const heading = document.getElementById('ty-heading');
+  const body = document.getElementById('ty-body');
+  const brochureLink = document.getElementById('ty-brochure-link');
+  const copy = {
+    brochure: ["Your brochure is ready.", "Download it below — we've also sent a copy to your email. Ready to take the next step? You can enroll anytime."],
+    payment: ["Payment successful — you're in.", "You've secured your seat. A confirmation email is on its way, along with your cohort community invite (WhatsApp/community group) within 24 hours."],
+    call: ["Request received.", "Jed will confirm a time with you shortly by email or WhatsApp."]
+  };
+  if (type && copy[type]) { heading.textContent = copy[type][0]; body.textContent = copy[type][1]; }
+  if (type === 'brochure') { brochureLink.classList.remove('hidden'); }
+</script>
+</body>
+</html>
