@@ -23,7 +23,7 @@
   <div class="container text-center">
     <span class="eyebrow" style="justify-content:center;">Secure Checkout</span>
     <h1 id="co-title">Complete Your Enrollment</h1>
-    <p class="lead" style="margin-left:auto; margin-right:auto;">You're one step from your seat. Payment is processed securely — you'll get an email confirmation and community access right after.</p>
+    <p class="lead" style="margin-left:auto; margin-right:auto;">You're one step from your seat. Payment is processed securely, and you'll get an email confirmation and community access right after.</p>
   </div>
 </header>
 
@@ -69,15 +69,15 @@
 
         <div class="price-toggle" role="tablist">
           <button type="button" class="active" data-price-tab="full">Pay in Full</button>
-          <button type="button" data-price-tab="split">Pay Monthly</button>
+          <button type="button" data-price-tab="split">70/30 Installment</button>
         </div>
         <div class="price-detail active" data-price-panel="full">
           <div class="price-line">[ Price ]</div>
           <div class="price-note">One payment, secures your seat immediately.</div>
         </div>
         <div class="price-detail" data-price-panel="split">
-          <div class="price-line">[ Price ] / mo</div>
-          <div class="price-note">Split across 3 monthly payments — first payment secures your seat.</div>
+          <div class="price-line">[ Price ]</div>
+          <div class="price-note">70% due now to secure your seat, remaining 30% due at the start of your second month.</div>
         </div>
 
         <ul class="pricing-features" style="margin-top:24px;">
@@ -93,7 +93,7 @@
 
 <script>
 const PROGRAMS = {
-  "pm-mastery": { name: "Project & Product Management Mastery", cohort: true },
+  "project-management": { name: "Project Management", cohort: true },
   "land-your-first-tech-job": { name: "Land Your First Tech Job", cohort: false },
   "interview-mastery": { name: "Interview Mastery & Job Search Strategy", cohort: false },
   "find-your-path": { name: "Find Your Path in Tech", cohort: false },
@@ -102,7 +102,7 @@ const PROGRAMS = {
   "build-and-test-with-ai": { name: "Build & Test Your Idea Fast with AI", cohort: false }
 };
 const params = new URLSearchParams(window.location.search);
-const slug = params.get("program") || "pm-mastery";
+const slug = params.get("program") || "project-management";
 const program = PROGRAMS[slug] || { name: "OIStride Program", cohort: false };
 document.getElementById("co-program-name").textContent = program.name;
 if (program.cohort) {

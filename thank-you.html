@@ -37,8 +37,8 @@
   const body = document.getElementById('ty-body');
   const brochureLink = document.getElementById('ty-brochure-link');
   const copy = {
-    brochure: ["Your brochure is ready.", "Download it below — we've also sent a copy to your email. Ready to take the next step? You can enroll anytime."],
-    payment: ["Payment successful — you're in.", "You've secured your seat. A confirmation email is on its way, along with your cohort community invite (WhatsApp/community group) within 24 hours."],
+    brochure: ["Your brochure is ready.", "Download it below. We've also sent a copy to your email. Ready to take the next step? You can enroll anytime."],
+    payment: ["Payment successful, you're in.", "You've secured your seat. A confirmation email is on its way, along with your cohort community invite (WhatsApp/community group) within 24 hours."],
     call: ["Request received.", "Jed will confirm a time with you shortly by email or WhatsApp."]
   };
   if (type && copy[type]) { heading.textContent = copy[type][0]; body.textContent = copy[type][1]; }
