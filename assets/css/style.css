@@ -10,6 +10,19 @@
   --indigo: #223889;
   --indigo-light: #6F7EB2;
   --indigo-pale: #E9EBF3;
+
+  /* Per-track accents (Project Management & Consulting intentionally reuse
+     --indigo — see spec). Mint/amber are placeholders pending confirmation
+     against OIStride_Slide_Template.pptx, which isn't in this repo. */
+  --accent-career: #F5A623;
+  --accent-career-light: #F9C570;
+  --accent-career-pale: #FEF6E9;
+  --accent-ai: #2EC4B6;
+  --accent-ai-light: #77D9D0;
+  --accent-ai-pale: #EAF9F8;
+  --accent-product: #64748B;
+  --accent-product-light: #A3AAC2;
+  --accent-product-pale: #F0F1F3;
   --bg: #FFFFFF;
   --bg-soft: #F8F9FE;
   --ink: #14183B;
@@ -24,6 +37,13 @@
   --font-body: 'Inter', sans-serif;
   --max: 1180px;
 }
+
+/* Track accent scope — set on <body> for a track's own page, or on an
+   individual .program-card when several tracks share one page (homepage
+   program board). Falls back to --indigo everywhere unscoped. */
+.track-career { --track-accent: var(--accent-career); --track-accent-light: var(--accent-career-light); --track-accent-pale: var(--accent-career-pale); }
+.track-ai { --track-accent: var(--accent-ai); --track-accent-light: var(--accent-ai-light); --track-accent-pale: var(--accent-ai-pale); }
+.track-product { --track-accent: var(--accent-product); --track-accent-light: var(--accent-product-light); --track-accent-pale: var(--accent-product-pale); }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -73,14 +93,14 @@ section { position: relative; }
   font-size: 12.5px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--indigo);
+  color: var(--track-accent, var(--indigo));
   margin-bottom: 18px;
 }
 .eyebrow::before {
   content: "";
   width: 18px;
   height: 2px;
-  background: var(--indigo);
+  background: var(--track-accent, var(--indigo));
   border-radius: 2px;
 }
 
@@ -197,8 +217,8 @@ section { position: relative; }
 .section-head h2 { font-size: clamp(28px, 3.6vw, 42px); }
 .section-head p { color: var(--grey); font-size: 17px; margin-top: 16px; }
 .section-navy .section-head p { color: rgba(255,255,255,0.68); }
-.section-navy .eyebrow { color: var(--indigo-light); }
-.section-navy .eyebrow::before { background: var(--indigo-light); }
+.section-navy .eyebrow { color: var(--track-accent-light, var(--indigo-light)); }
+.section-navy .eyebrow::before { background: var(--track-accent-light, var(--indigo-light)); }
 
 /* Pillars (What We Do) */
 .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
@@ -230,14 +250,15 @@ section { position: relative; }
 /* Program grid */
 .program-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
 .program-card {
-  background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
+  background: #fff; border: 1px solid var(--border); border-top: 4px solid var(--track-accent, var(--indigo));
+  border-radius: var(--radius);
   overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .program-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
 .program-top { padding: 30px 28px 0; }
 .program-badge {
   display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--indigo); background: var(--indigo-pale); padding: 5px 12px; border-radius: 20px; margin-bottom: 16px;
+  color: var(--track-accent, var(--indigo)); background: var(--track-accent-pale, var(--indigo-pale)); padding: 5px 12px; border-radius: 20px; margin-bottom: 16px;
 }
 .program-card h3 { font-size: 20px; margin-bottom: 10px; }
 .program-card p.desc { color: var(--grey); font-size: 14.5px; }
@@ -323,8 +344,8 @@ section { position: relative; }
   background: linear-gradient(180deg, var(--navy), #1B2050);
   color: #fff; padding: 130px 0 90px;
 }
-.page-hero .eyebrow { color: var(--indigo-light); }
-.page-hero .eyebrow::before { background: var(--indigo-light); }
+.page-hero .eyebrow { color: var(--track-accent-light, var(--indigo-light)); }
+.page-hero .eyebrow::before { background: var(--track-accent-light, var(--indigo-light)); }
 .page-hero h1 { color: #fff; font-size: clamp(32px, 4.6vw, 50px); max-width: 760px; }
 .page-hero p.lead { color: rgba(255,255,255,0.75); font-size: 17px; margin-top: 18px; max-width: 600px; }
 .breadcrumb { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 20px; }
