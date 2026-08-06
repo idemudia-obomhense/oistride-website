@@ -150,6 +150,28 @@ section { position: relative; }
   background: var(--indigo); border-radius: 2px;
 }
 .nav-cta { display: flex; align-items: center; gap: 18px; }
+.nav-signin { font-size: 14.5px; font-weight: 600; color: var(--navy); }
+.nav-signin:hover { color: var(--indigo); }
+
+.user-menu { position: relative; }
+.user-menu-trigger {
+  background: none; border: none; cursor: pointer; font-family: var(--font-body);
+  font-size: 14.5px; font-weight: 600; color: var(--navy); display: flex; align-items: center; gap: 4px; padding: 6px 0;
+}
+.user-menu-trigger:hover { color: var(--indigo); }
+.user-menu-trigger span { font-size: 11px; }
+.user-menu-panel {
+  position: absolute; top: 100%; right: 0; margin-top: 10px;
+  background: #fff; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  box-shadow: var(--shadow); padding: 6px; min-width: 140px;
+  opacity: 0; visibility: hidden; transform: translateY(6px); transition: all 0.18s ease;
+}
+.user-menu.open .user-menu-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+.user-menu-panel button {
+  width: 100%; text-align: left; background: none; border: none; cursor: pointer;
+  padding: 10px 12px; border-radius: 8px; font-family: var(--font-body); font-size: 13.5px; color: var(--navy);
+}
+.user-menu-panel button:hover { background: var(--bg-soft); }
 .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 6px; }
 .nav-toggle span { display: block; width: 22px; height: 2px; background: var(--navy); margin: 5px 0; border-radius: 2px; }
 
@@ -490,6 +512,52 @@ section { position: relative; }
 .step-dot.active { background: var(--indigo); }
 .form-nav { display: flex; justify-content: space-between; margin-top: 28px; }
 .honeypot { position: absolute; left: -9999px; opacity: 0; height: 0; }
+
+/* Auth modal (Sign Up / Sign In / Forgot Password) */
+.auth-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(20, 24, 59, 0.55); backdrop-filter: blur(2px);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  opacity: 0; visibility: hidden; transition: opacity 0.2s ease;
+}
+.auth-overlay.open { opacity: 1; visibility: visible; }
+.auth-modal {
+  position: relative; background: #fff; border-radius: var(--radius);
+  padding: 40px; width: 100%; max-width: 440px; max-height: 90vh; overflow-y: auto;
+  box-shadow: var(--shadow);
+}
+.auth-close {
+  position: absolute; top: 18px; right: 18px; width: 32px; height: 32px; border-radius: 50%;
+  background: var(--bg-soft); border: none; cursor: pointer; font-size: 20px; line-height: 1;
+  color: var(--grey); display: flex; align-items: center; justify-content: center;
+}
+.auth-close:hover { background: var(--border); color: var(--navy); }
+.auth-screen { display: none; }
+.auth-screen.active { display: block; }
+.auth-screen h2 { font-size: 22px; padding-right: 20px; }
+.auth-sub { color: var(--grey); font-size: 14px; margin-top: 8px; margin-bottom: 26px; }
+.auth-screen form { margin-top: 22px; }
+.auth-optional { color: var(--grey-light); font-weight: 500; text-transform: none; letter-spacing: normal; }
+.auth-forgot { text-align: right; margin: -10px 0 20px; }
+.auth-forgot a { font-size: 13px; color: var(--indigo); font-weight: 600; }
+.auth-error {
+  background: #FEF2F2; color: #B91C1C; font-size: 13px; padding: 10px 14px;
+  border-radius: var(--radius-sm); margin-bottom: 16px;
+}
+.auth-success {
+  background: #F0FDF4; color: #15803D; font-size: 13px; padding: 10px 14px;
+  border-radius: var(--radius-sm); margin-bottom: 16px;
+}
+.auth-footer { text-align: center; font-size: 13.5px; color: var(--grey); margin-top: 22px; }
+.auth-footer a { color: var(--indigo); font-weight: 600; }
+.auth-transition-msg {
+  text-align: center; padding: 30px 0; font-family: var(--font-display); font-weight: 800;
+  font-size: 18px; color: var(--navy);
+}
+@media (max-width: 680px) {
+  .auth-overlay { padding: 0; }
+  .auth-modal { max-width: none; width: 100%; height: 100%; max-height: none; border-radius: 0; display: flex; flex-direction: column; justify-content: center; }
+}
 
 /* Utility */
 .text-center { text-align: center; }

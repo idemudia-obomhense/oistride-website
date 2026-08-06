@@ -14,6 +14,7 @@
   <div class="container">
     <a href="index.html" class="nav-logo"><img src="assets/img/logo.png" alt="OIStride"></a>
     <div class="nav-cta" style="margin-left:auto;">
+      <div data-auth-slot></div>
       <a href="index.html" class="btn btn-outline btn-sm">← Back Home</a>
     </div>
   </div>
@@ -109,6 +110,9 @@ if (program.cohort) {
   document.getElementById("cohort-field").classList.remove("hidden");
 }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase-config.js"></script>
+<script src="assets/js/auth.js"></script>
 <script src="assets/js/main.js"></script>
 </body>
 </html>
