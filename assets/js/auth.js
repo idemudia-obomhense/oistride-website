@@ -16,6 +16,35 @@
   window.OIStrideAuth = { client };
 
   // ---------------------------------------------------------------------
+  // Session state — single source of truth, kept current via
+  // onAuthStateChange rather than re-querying getSession() ad hoc from
+  // each call site. Everything that needs "is there a session right now"
+  // (nav, the Enroll gate, the checkout guard) reads through
+  // getCurrentSession() below, so there's exactly one place that can be
+  // wrong instead of several that can drift out of sync with each other.
+  // ---------------------------------------------------------------------
+  let currentSession = null;
+  let sessionReady = null;
+
+  function initSessionTracking() {
+    sessionReady = client.auth.getSession().then(({ data }) => {
+      currentSession = data.session;
+      refreshNavState();
+      return currentSession;
+    });
+
+    client.auth.onAuthStateChange((_event, session) => {
+      currentSession = session;
+      refreshNavState();
+    });
+  }
+
+  async function getCurrentSession() {
+    if (sessionReady) await sessionReady;
+    return currentSession;
+  }
+
+  // ---------------------------------------------------------------------
   // Modal DOM (injected once per page)
   // ---------------------------------------------------------------------
   let overlay, modal;
@@ -149,12 +178,13 @@
 
     if (error) { showError(form, error.message); return; }
 
+    currentSession = data.session;
+    refreshNavState();
+
     const pendingProgram = sessionStorage.getItem(PENDING_PROGRAM_KEY);
     if (pendingProgram && data.user) {
       await markEnrollmentStarted(data.user.id, pendingProgram);
     }
-
-    await refreshNavState();
 
     if (pendingProgram) {
       showScreen('transition');
@@ -182,7 +212,8 @@
 
     if (error) { showError(form, error.message); return; }
 
-    await refreshNavState();
+    currentSession = data.session;
+    refreshNavState();
 
     const pendingProgram = sessionStorage.getItem(PENDING_PROGRAM_KEY);
     const fromEnroll = sessionStorage.getItem(FROM_ENROLL_KEY) === '1';
@@ -228,6 +259,7 @@
 
   async function signOut() {
     await client.auth.signOut();
+    currentSession = null;
     window.location.href = 'index.html';
   }
 
@@ -256,19 +288,20 @@
   // Exposed so checkout.html's existing demo submit handler can mark the
   // enrollment complete once payment (currently still a demo) "succeeds".
   window.OIStrideAuth.markEnrollmentCompleted = async function (programSlug) {
-    const { data: { session } } = await client.auth.getSession();
+    const session = await getCurrentSession();
     if (!session) return;
     await client.from('enrollments').update({ status: 'completed' })
       .eq('user_id', session.user.id).eq('program_slug', programSlug);
   };
 
   // ---------------------------------------------------------------------
-  // Nav state (Sign In link <-> "Hi, Name ▾" menu)
+  // Nav state (Sign In link <-> "Hi, Name ▾" menu). Driven purely by
+  // currentSession — called on initial load and on every auth state
+  // change (see initSessionTracking), never only once.
   // ---------------------------------------------------------------------
-  async function refreshNavState() {
-    const { data: { session } } = await client.auth.getSession();
+  function refreshNavState() {
     const slots = document.querySelectorAll('[data-auth-slot]');
-    slots.forEach((slot) => renderAuthSlot(slot, session));
+    slots.forEach((slot) => renderAuthSlot(slot, currentSession));
   }
 
   function renderAuthSlot(slot, session) {
@@ -316,7 +349,7 @@
         e.preventDefault();
         const url = new URL(el.getAttribute('href'), window.location.href);
         const slug = url.searchParams.get('program');
-        const { data: { session } } = await client.auth.getSession();
+        const session = await getCurrentSession();
         if (session) {
           window.location.href = el.getAttribute('href');
           return;
@@ -335,7 +368,7 @@
   // ---------------------------------------------------------------------
   async function guardCheckout() {
     if (!/checkout\.html$/.test(window.location.pathname)) return;
-    const { data: { session } } = await client.auth.getSession();
+    const session = await getCurrentSession();
     if (session) return;
     const slug = new URLSearchParams(window.location.search).get('program');
     if (slug) {
@@ -346,9 +379,9 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    initSessionTracking();
     buildModal();
     wireEnrollLinks();
-    refreshNavState();
     guardCheckout();
   });
 })();
