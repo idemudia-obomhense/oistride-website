@@ -36,7 +36,7 @@ Body: LinkedIn and CV overhauls, interview mastery, and a personalised roadmap i
 
 **Pillar 2**
 Label: LEARN
-Title: Project Management
+Title: Agile Project Management
 Body: An 8-week live cohort covering Agile, Scrum, Waterfall, and real project simulation, taught the way working teams actually operate.
 
 **Pillar 3**
@@ -71,7 +71,7 @@ Facts: 2-3 live sessions
 
 **Card 2**
 Tag: ANCHOR PROGRAM
-Title: Project Management
+Title: Agile Project Management
 Body: A live, 8-week cohort covering Agile, Scrum, Waterfall, and real project simulation, ending in a certificate.
 Facts: 8 weeks · Certificate
 
@@ -83,7 +83,7 @@ Facts: 3 live sessions
 
 ### Featured Program Deep-Dive
 **Eyebrow:** FEATURED PROGRAM
-**Heading:** Project Management, the anchor cohort
+**Heading:** Agile Project Management, the anchor cohort
 **Subhead:** Eight live weeks. Two case studies a week. A certificate that reflects work you actually did, not a quiz you passed.
 
 **Numbered highlights:**
@@ -128,12 +128,12 @@ These are layout placeholders. Testimonials will be replaced with verified quote
 
 ---
 
-## PROJECT MANAGEMENT PROGRAM PAGE (rename from program-pm-mastery.html)
+## AGILE PROJECT MANAGEMENT PROGRAM PAGE (program-agile-project-management.html; renamed from program-pm-mastery.html, then from "Project Management")
 
 ### Hero
-**Breadcrumb:** Home / Programs / Project Management
+**Breadcrumb:** Home / Programs / Agile Project Management
 **Eyebrow:** ANCHOR PROGRAM · LIVE COHORT
-**Headline:** Project Management
+**Headline:** Agile Project Management
 **Subhead:** An 8-week, live cohort covering Agile, Scrum, Waterfall, and hybrid methodologies, with real project simulation from initiation to delivery.
 **Buttons:** Enroll Now, Choose Your Cohort / Download Brochure
 
@@ -258,7 +258,7 @@ This replaces all existing About page copy below, not just additions. Reason: th
 Built to bring Jed's project management training, career coaching, and AI-build work under one roof, separate from any single employer.
 
 **Next — First cohort opens**
-The Project Management cohort opens enrollment, alongside the Career Acceleration and AI Fluency & Building tracks.
+The Agile Project Management cohort opens enrollment, alongside the Career Acceleration and AI Fluency & Building tracks.
 
 **Later — Community and alumni network**
 As cohorts complete, an alumni community forms. Graduation is the start, not the finish line.
@@ -293,14 +293,14 @@ His approach comes from one belief: learning should change the way you work, not
 **Breadcrumb:** Home / Programs / Product Management
 **Eyebrow:** COMING SOON
 **Headline:** Product Management
-**Subhead:** A dedicated Product Management cohort is in development, built the same way as our Project Management program: real cases, live practice, a practitioner who's actually done the work.
+**Subhead:** A dedicated Product Management cohort is in development, built the same way as our Agile Project Management program: real cases, live practice, a practitioner who's actually done the work.
 
 **Body copy:**
 We're building this properly rather than rushing it out. If you want to be the first to know when applications open, leave your email below.
 
 **Form:** Email input + "Notify Me" button (no pricing, no curriculum, no Enroll button)
 
-**Secondary link:** In the meantime, our Project Management cohort is open now, if that's closer to what you need. → View Program
+**Secondary link:** In the meantime, our Agile Project Management cohort is open now, if that's closer to what you need. → View Program
 
 ---
 
@@ -380,7 +380,7 @@ This isn't taught from a textbook. Jed independently scoped, built, and launched
 **Pricing & Payment**
 
 **How much do programs cost?**
-Pricing varies by program. Career Acceleration and AI Fluency services are priced individually per service. The Project Management cohort's investment is shown on its program page, with a 70/30 installment option available.
+Pricing varies by program. Career Acceleration and AI Fluency services are priced individually per service. The Agile Project Management cohort's investment is shown on its program page, with a 70/30 installment option available.
 
 **Is there a payment plan?**
 Yes. Every paid program offers a 70/30 installment: 70% before resuming (to secure your seat), and the remaining 30% at the start of your second month.
@@ -394,7 +394,7 @@ Yes. Every paid program offers a 70/30 installment: 70% before resuming (to secu
 All core sessions are live. Recordings are shared with enrolled students afterward, but the case-study work is built for live participation.
 
 **How much time do I need per week?**
-This varies by program. The Project Management cohort runs about 1 hour of live class per week plus a short pre-read. Career and AI services are typically 1 to 3 sessions total, no ongoing weekly commitment.
+This varies by program. The Agile Project Management cohort runs about 1 hour of live class per week plus a short pre-read. Career and AI services are typically 1 to 3 sessions total, no ongoing weekly commitment.
 
 **Organisations**
 
@@ -410,7 +410,7 @@ Book a free consultation, or reach out directly on WhatsApp or email, both linke
 
 ## MICROCOPY / SMALL FIXES
 
-- Checkout page order-summary heading: keep "Order Summary" but ensure the program name always populates correctly (verify the JS mapping includes the renamed "Project Management" and new "Product Management" slugs once the split happens).
+- Checkout page order-summary heading: keep "Order Summary" but ensure the program name always populates correctly (verify the JS mapping includes "Agile Project Management" — renamed again from "Project Management," slug key unchanged — and the "Product Management" slug).
 - Checkout page "70/30 Installment" panel note: "70% due now to secure your seat, remaining 30% due at the start of your second month."
 - Career/AI service pages, the small note under each price: "Or pay 70% now, 30% at the start of your second month."
 - Book a Call page: copy is already good, no changes needed.
