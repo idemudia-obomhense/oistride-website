@@ -2,19 +2,39 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // Mobile nav toggle
+  // Mobile nav toggle — full-screen overlay menu, driven entirely by CSS
+  // classes (see .nav-links.mobile-open) so it never fights inline styles.
   const toggle = document.querySelector('.nav-toggle');
   const links = document.querySelector('.nav-links');
-  const navCta = document.querySelector('.nav-cta');
-  if (toggle) {
+  if (toggle && links) {
+    const closeMenu = () => {
+      links.classList.remove('mobile-open');
+      toggle.classList.remove('active');
+      document.body.style.overflow = '';
+    };
     toggle.addEventListener('click', () => {
-      links.classList.toggle('mobile-open');
-      if (links.classList.contains('mobile-open')) {
-        links.style.cssText = 'display:flex; flex-direction:column; position:absolute; top:78px; left:0; right:0; background:#fff; padding:20px 28px; border-bottom:1px solid #E6E8F5; gap:18px;';
-      } else {
-        links.style.cssText = '';
-      }
+      const isOpen = links.classList.toggle('mobile-open');
+      toggle.classList.toggle('active', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
     });
+    links.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeMenu));
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) closeMenu();
+    });
+  }
+
+  // Sticky mobile Enroll CTA — appears once the hero has scrolled past,
+  // so converting doesn't require scrolling back up.
+  const stickyCta = document.querySelector('.sticky-mobile-cta');
+  if (stickyCta) {
+    const hero = document.querySelector('.page-hero, .hero');
+    document.body.classList.add('has-sticky-cta');
+    const toggleSticky = () => {
+      if (!hero) return;
+      stickyCta.classList.toggle('visible', hero.getBoundingClientRect().bottom < 0);
+    };
+    toggleSticky();
+    window.addEventListener('scroll', toggleSticky, { passive: true });
   }
 
   // Scroll reveal

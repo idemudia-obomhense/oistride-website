@@ -431,7 +431,7 @@ section { position: relative; }
 .cohort-bar .label { color: var(--indigo-light); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.06em; }
 .cohort-bar select {
   background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 8px; padding: 6px 10px; font-family: var(--font-body); font-size: 13.5px;
+  border-radius: 8px; padding: 6px 10px; font-family: var(--font-body); font-size: 16px;
 }
 .slots-row { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--grey); margin: 10px 0 6px; }
 .slots-track { height: 6px; border-radius: 4px; background: var(--border); overflow: hidden; }
@@ -500,7 +500,7 @@ section { position: relative; }
 .form-row label { display: block; font-size: 13.5px; font-weight: 600; margin-bottom: 8px; }
 .form-row input, .form-row select, .form-row textarea {
   width: 100%; padding: 13px 16px; border-radius: var(--radius-sm); border: 1.5px solid var(--border);
-  font-family: var(--font-body); font-size: 14.5px; background: var(--bg-soft); transition: border-color 0.15s ease;
+  font-family: var(--font-body); font-size: 16px; background: var(--bg-soft); transition: border-color 0.15s ease;
 }
 .form-row input:focus, .form-row select:focus, .form-row textarea:focus { border-color: var(--indigo); outline: none; background: #fff; }
 .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -554,9 +554,24 @@ section { position: relative; }
   text-align: center; padding: 30px 0; font-family: var(--font-display); font-weight: 800;
   font-size: 18px; color: var(--navy);
 }
-@media (max-width: 680px) {
+@media (max-width: 768px) {
   .auth-overlay { padding: 0; }
   .auth-modal { max-width: none; width: 100%; height: 100%; max-height: none; border-radius: 0; display: flex; flex-direction: column; justify-content: center; }
+}
+
+/* Sticky mobile Enroll CTA — program detail pages only, mobile only.
+   Shown by main.js once the hero has scrolled out of view. */
+.sticky-mobile-cta { display: none; }
+@media (max-width: 768px) {
+  body.has-sticky-cta { padding-bottom: 78px; }
+  .sticky-mobile-cta {
+    display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 150;
+    background: #fff; border-top: 1px solid var(--border);
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -8px 24px -8px rgba(20,24,59,0.12);
+  }
+  .sticky-mobile-cta.visible { display: flex; }
+  .sticky-mobile-cta .btn { width: 100%; }
 }
 
 /* Utility */
@@ -571,7 +586,8 @@ section { position: relative; }
 /* ==========================================================================
    Responsive
    ========================================================================== */
-@media (max-width: 960px) {
+/* Tablet: 768–1024px — mostly follows the mobile stacking patterns below */
+@media (max-width: 1024px) {
   .pillars, .program-grid, .why-grid, .testimonial-row { grid-template-columns: repeat(2, 1fr); }
   .deepdive, .founder, .two-col { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
@@ -580,14 +596,54 @@ section { position: relative; }
   .job-grid { grid-template-columns: repeat(2, 1fr); }
   .cert-block { grid-template-columns: 1fr; }
 }
-@media (max-width: 680px) {
-  .nav-links, .nav-cta .btn-outline { display: none; }
-  .nav-toggle { display: block; }
-  .pillars, .program-grid, .why-grid, .testimonial-row, .fit-grid, .form-grid-2 { grid-template-columns: 1fr; }
-  .section { padding: 72px 0; }
-  .hero { padding: 120px 0 70px; }
+
+/* Mobile: below 768px */
+@media (max-width: 768px) {
+  html { -webkit-text-size-adjust: 100%; }
+  body { overflow-x: hidden; }
+
+  /* Nav: hamburger + full-screen overlay menu. Sign In / logged-in menu
+     stays in the top bar at all times — never buried in the hamburger. */
+  .nav-links { display: none; }
+  .nav-cta .btn-outline { display: none; }
+  .nav-toggle { display: block; z-index: 210; position: relative; }
+  .nav-toggle span { transition: transform 0.2s ease, opacity 0.2s ease; }
+  .nav-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-toggle.active span:nth-child(2) { opacity: 0; }
+  .nav-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .nav-links.mobile-open {
+    display: flex; flex-direction: column; align-items: stretch;
+    position: fixed; top: 78px; left: 0; right: 0; height: calc(100vh - 78px); z-index: 190;
+    background: #fff; padding: 12px 28px 40px; gap: 2px;
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+  }
+  .nav-links.mobile-open a {
+    padding: 16px 4px; font-size: 18px; border-bottom: 1px solid var(--border);
+    min-height: 44px; display: flex; align-items: center;
+  }
+  .nav-links.mobile-open .dropdown { display: block; }
+  .nav-links.mobile-open .dropdown-panel {
+    position: static; opacity: 1; visibility: visible; transform: none;
+    box-shadow: none; border: none; padding: 0 0 0 16px; min-width: 0;
+  }
+  .nav-links.mobile-open .dropdown-panel a { border-bottom: none; padding: 12px 4px; font-size: 16px; }
+  .nav-links.mobile-open .track-label { padding: 14px 4px 4px; }
+
+  .pillars, .program-grid, .why-grid, .testimonial-row, .fit-grid, .form-grid-2, .job-grid { grid-template-columns: 1fr; }
+  .section { padding: 64px 0; }
+  .hero { padding: 116px 0 60px; }
   .founder-photo { aspect-ratio: 16/10; }
   .newsletter { flex-direction: column; align-items: flex-start; }
-  .job-grid { grid-template-columns: 1fr; }
   .cohort-bar { flex-direction: column; align-items: flex-start; }
+
+  /* Reflow card meta rows instead of letting them force horizontal scroll */
+  .program-meta { flex-wrap: wrap; row-gap: 8px; }
+  .job-pill { font-size: 13px; }
+
+  /* Minimum 44px tap targets on the site's core interactive controls */
+  .btn, .btn-sm { min-height: 44px; }
+  .nav-signin, .user-menu-trigger { min-height: 44px; display: inline-flex; align-items: center; }
+  .faq-q { min-height: 44px; }
+  .dropdown-panel a { min-height: 44px; display: flex; align-items: center; }
 }
