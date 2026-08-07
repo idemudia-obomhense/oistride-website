@@ -11,13 +11,35 @@ document.addEventListener('DOMContentLoaded', () => {
       links.classList.remove('mobile-open');
       toggle.classList.remove('active');
       document.body.style.overflow = '';
+      const dropdown = links.querySelector('.dropdown');
+      if (dropdown) dropdown.classList.remove('open');
     };
     toggle.addEventListener('click', () => {
       const isOpen = links.classList.toggle('mobile-open');
       toggle.classList.toggle('active', isOpen);
       document.body.style.overflow = isOpen ? 'hidden' : '';
     });
-    links.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeMenu));
+
+    // "Programs" becomes a collapsed-by-default accordion on mobile —
+    // tap toggles it open/closed instead of navigating away, so the full
+    // sub-service list never renders expanded by default (the reported
+    // bug). Desktop keeps its normal click-through + hover behavior.
+    const dropdownTrigger = links.querySelector('.dropdown > a');
+    if (dropdownTrigger) {
+      dropdownTrigger.addEventListener('click', (e) => {
+        if (links.classList.contains('mobile-open')) {
+          e.preventDefault();
+          dropdownTrigger.parentElement.classList.toggle('open');
+        }
+      });
+    }
+
+    // Any other link (top-level or a program sub-link) navigates away,
+    // so close the whole menu behind it.
+    links.querySelectorAll('a').forEach((a) => {
+      if (a === dropdownTrigger) return;
+      a.addEventListener('click', closeMenu);
+    });
     window.addEventListener('resize', () => {
       if (window.innerWidth > 768) closeMenu();
     });

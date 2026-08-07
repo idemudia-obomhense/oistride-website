@@ -176,6 +176,8 @@ section { position: relative; }
 .nav-toggle span { display: block; width: 22px; height: 2px; background: var(--navy); margin: 5px 0; border-radius: 2px; }
 
 .dropdown { position: relative; }
+.dropdown > a { display: inline-flex; align-items: center; gap: 5px; }
+.dropdown > a::after { content: "▾"; font-size: 10px; transition: transform 0.2s ease; }
 .dropdown-panel {
   position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(8px);
   background: #fff; border: 1px solid var(--border); border-radius: var(--radius-sm);
@@ -623,10 +625,17 @@ section { position: relative; }
     min-height: 44px; display: flex; align-items: center;
   }
   .nav-links.mobile-open .dropdown { display: block; }
+  .nav-links.mobile-open > .dropdown > a { justify-content: space-between; }
+  .nav-links.mobile-open > .dropdown > a::after { content: "›"; font-size: 20px; }
+  .nav-links.mobile-open > .dropdown.open > a::after { transform: rotate(90deg); }
+  /* Collapsed accordion by default — this is the fix for the reported bug
+     where the full Programs list rendered expanded on mobile. */
   .nav-links.mobile-open .dropdown-panel {
     position: static; opacity: 1; visibility: visible; transform: none;
     box-shadow: none; border: none; padding: 0 0 0 16px; min-width: 0;
+    max-height: 0; overflow: hidden; transition: max-height 0.3s ease;
   }
+  .nav-links.mobile-open .dropdown.open .dropdown-panel { max-height: 900px; }
   .nav-links.mobile-open .dropdown-panel a { border-bottom: none; padding: 12px 4px; font-size: 16px; }
   .nav-links.mobile-open .track-label { padding: 14px 4px 4px; }
 
