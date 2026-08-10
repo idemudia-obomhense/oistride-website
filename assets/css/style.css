@@ -324,8 +324,8 @@ section { position: relative; }
 .founder { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 56px; align-items: center; }
 .founder-photo {
   aspect-ratio: 4/5; border-radius: var(--radius); background: linear-gradient(160deg, var(--navy), var(--indigo));
-  display: flex; align-items: end; padding: 24px; color: rgba(255,255,255,0.7); font-size: 13px;
-  overflow: hidden;
+  color: rgba(255,255,255,0.7); font-size: 13px;
+  overflow: hidden; box-shadow: var(--shadow-sm);
 }
 .founder-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
 .founder-badges { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
