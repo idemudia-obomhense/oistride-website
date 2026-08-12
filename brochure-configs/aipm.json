@@ -1,0 +1,309 @@
+{
+  "footer_label": "AI PRODUCT MANAGEMENT",
+  "facilitator_role": "AI Product Leader & Coach",
+  "hero_eyebrow": "12-WEEK LIVE PROGRAM",
+  "hero_title": "AI Product Management",
+  "hero_sub": "A hands-on, case-study-driven program where you learn to identify, design, evaluate and ship AI-powered products the way real AI teams practice it \u2014 then walk away with a portfolio-ready AI product case study.",
+  "hero_pills": [
+    "Live Weekly Classes",
+    "Case-Study Led",
+    "Built On A Live Capstone Product"
+  ],
+  "hero_cards": [
+    {
+      "code": "AIPM-04",
+      "title": "AI Product Strategy & Vision",
+      "color": "#6C63FF"
+    },
+    {
+      "code": "AIPM-05",
+      "title": "Generative AI & LLMs",
+      "color": "#3ECF8E"
+    },
+    {
+      "code": "AIPM-06",
+      "title": "AI Product Design & UX",
+      "color": "#F5A623"
+    }
+  ],
+  "how_headline": "Built like a real AI product team \u2014 every single week.",
+  "how_sub": "This isn't a lecture series. Every week follows the same rhythm real AI product teams use: prepare, work the case, apply it to your own capstone product, get feedback.",
+  "format_stats": [
+    {
+      "num": "2 Hr",
+      "label": "Per Live Session"
+    },
+    {
+      "num": "12",
+      "label": "Live Weekly Sessions"
+    },
+    {
+      "num": "3",
+      "label": "Months, Start To Finish"
+    },
+    {
+      "num": "Direct",
+      "label": "Access To Your Facilitator"
+    }
+  ],
+  "steps": [
+    {
+      "title": "Pre-Read Sent",
+      "desc": "Reading material for the week is sent ahead of class, so you walk in already familiar with the topic."
+    },
+    {
+      "title": "Live Case Study",
+      "desc": "The live class works through a real-world AI product case study built around that week's topic \u2014 not just theory."
+    },
+    {
+      "title": "Build On Your Capstone",
+      "desc": "Every week you apply what you learned to your own AI product, building a portfolio-ready case study as the program progresses."
+    },
+    {
+      "title": "Direct Access",
+      "desc": "Mentorship access to your facilitator throughout the program \u2014 for questions between classes too."
+    }
+  ],
+  "phases": [
+    {
+      "title": "Understand & Discover",
+      "weeks": "1\u20134",
+      "desc": "Where every AI Product Manager has to start \u2014 what AI actually is, where it creates real value, and how to responsibly identify AI opportunities worth building.",
+      "color": "#6C63FF"
+    },
+    {
+      "title": "Design & Build",
+      "weeks": "5\u20138",
+      "desc": "Where it becomes real \u2014 LLMs, generative AI, AI-powered UX, and translating AI capability into shippable product requirements.",
+      "color": "#3ECF8E"
+    },
+    {
+      "title": "Evaluate, Launch & Grow",
+      "weeks": "9\u201312",
+      "desc": "The skills teams actually pay for \u2014 responsible AI, MLOps, launch strategy, monetization, and leading AI products through ambiguity.",
+      "color": "#F5A623"
+    }
+  ],
+  "weeks": [
+    {
+      "week": 1,
+      "code": "AIPM-01",
+      "title": "AI Foundations for Product Managers",
+      "application": "APPLICATION: AI PRODUCT TEARDOWN",
+      "bullets": [
+        "Artificial Intelligence, Machine Learning & Generative AI, explained at a PM level",
+        "Where AI systems succeed, struggle & fail \u2014 hallucinations, bias & uncertainty",
+        "The AI PM role: partnering with data scientists, ML & software engineers"
+      ]
+    },
+    {
+      "week": 2,
+      "code": "AIPM-02",
+      "title": "AI Product Discovery & Opportunity ID",
+      "application": "APPLICATION: EVALUATE & RANK AI OPPORTUNITIES",
+      "bullets": [
+        "Spotting where AI creates real leverage \u2014 automation, prediction, generation, personalization",
+        "Separating genuine customer problems from AI-shaped solutions looking for one",
+        "Evaluating opportunities on value, feasibility, data availability & risk"
+      ]
+    },
+    {
+      "week": 3,
+      "code": "AIPM-03",
+      "title": "Data, Research & AI Product Foundations",
+      "application": "APPLICATION: DATA REQUIREMENTS ASSESSMENT",
+      "bullets": [
+        "Structured vs unstructured data, and what makes training data usable",
+        "Data collection, labeling, cleaning, privacy & bias",
+        "Building a data strategy that creates a sustainable advantage"
+      ]
+    },
+    {
+      "week": 4,
+      "code": "AIPM-04",
+      "title": "AI Product Strategy & Vision",
+      "application": "APPLICATION: BUILD AN AI PRODUCT STRATEGY",
+      "bullets": [
+        "Defining AI product vision: customer outcome, business outcome, AI's role in it",
+        "Build vs buy vs partner, model selection & competitive differentiation",
+        "AI business models: subscription, usage-based, API & enterprise pricing"
+      ]
+    },
+    {
+      "week": 5,
+      "code": "AIPM-05",
+      "title": "Generative AI, LLMs & AI Applications",
+      "application": "APPLICATION: DECONSTRUCT AN AI PRODUCT'S ARCHITECTURE",
+      "bullets": [
+        "How LLMs work: tokens, context windows, foundation models & their limits",
+        "Prompting, embeddings, RAG, fine-tuning & tool/function calling",
+        "AI agents vs chatbots \u2014 planning, memory & human-in-the-loop workflows"
+      ]
+    },
+    {
+      "week": 6,
+      "code": "AIPM-06",
+      "title": "AI Product Design & User Experience",
+      "application": "APPLICATION: DESIGN AN AI-POWERED EXPERIENCE",
+      "bullets": [
+        "Designing for probabilistic outputs \u2014 confidence, error recovery & graceful failure",
+        "AI UX patterns: copilots, chat, recommendations & agentic workflows",
+        "Building trust through transparency, sourcing & human override"
+      ]
+    },
+    {
+      "week": 7,
+      "code": "AIPM-07",
+      "title": "AI Product Requirements & Development",
+      "application": "APPLICATION: WRITE AN AI PRD",
+      "bullets": [
+        "Writing AI-specific requirements: accuracy, latency, cost & model behaviour",
+        "AI user stories, acceptance criteria & failure scenarios",
+        "The AI development lifecycle: data, model, integration, testing & monitoring"
+      ]
+    },
+    {
+      "week": 8,
+      "code": "AIPM-08",
+      "title": "AI Experimentation, Testing & Evaluation",
+      "application": "APPLICATION: BUILD AN EVALUATION FRAMEWORK",
+      "bullets": [
+        "Designing AI experiments with real baselines & success criteria",
+        "Model evaluation: accuracy, precision, recall & benchmarking",
+        "Evaluating generative AI: relevance, groundedness, safety & consistency"
+      ]
+    },
+    {
+      "week": 9,
+      "code": "AIPM-09",
+      "title": "Responsible AI, Risk & Governance",
+      "application": "APPLICATION: CONDUCT AN AI RISK ASSESSMENT",
+      "bullets": [
+        "Responsible AI principles: fairness, transparency & accountability",
+        "Identifying AI risk: bias, hallucination, prompt injection & over-reliance",
+        "Governance, guardrails & incident management for AI products"
+      ]
+    },
+    {
+      "week": 10,
+      "code": "AIPM-10",
+      "title": "MLOps, Deployment & AI Product Ops",
+      "application": "APPLICATION: BUILD AN OPERATIONAL PLAN",
+      "bullets": [
+        "What MLOps means for a PM: model lifecycle, deployment & serving",
+        "Monitoring for data drift, model drift, latency & reliability",
+        "Managing inference costs & the economics of scaling an AI product"
+      ]
+    },
+    {
+      "week": 11,
+      "code": "AIPM-11",
+      "title": "AI Launch, Growth & Commercialization",
+      "application": "APPLICATION: BUILD A GTM & PRICING STRATEGY",
+      "bullets": [
+        "Launch readiness, beta & pilot programs, and customer education",
+        "Positioning & communicating AI value to technical and non-technical buyers",
+        "AI monetization: usage-based, token-based, seat-based & outcome-based pricing"
+      ]
+    },
+    {
+      "week": 12,
+      "code": "AIPM-12",
+      "title": "AI Product Leadership & Capstone",
+      "application": "APPLICATION: PRESENT THE COMPLETE AI PRODUCT",
+      "bullets": [
+        "Leading AI teams through ambiguity & incomplete information",
+        "Trade-offs: build vs buy, automation vs oversight, speed vs quality",
+        "Presenting a portfolio-ready, end-to-end AI Product Management case study"
+      ]
+    }
+  ],
+  "who_headline": "Built for people who need AI product skills to actually work.",
+  "who_sub": "No prior AI or data science experience required \u2014 the program starts from AI fundamentals and builds up to advanced, tool-based AI product practice.",
+  "personas": [
+    {
+      "title": "Product Managers Moving Into AI",
+      "desc": "Add AI fluency to existing PM experience and lead AI-powered roadmaps with confidence."
+    },
+    {
+      "title": "Aspiring AI Product Managers",
+      "desc": "Break into AI Product Management with the frameworks and vocabulary the role actually demands."
+    },
+    {
+      "title": "Data Scientists & ML Engineers",
+      "desc": "Move from building models to owning the product decisions built around them."
+    },
+    {
+      "title": "Founders Building AI Products",
+      "desc": "Learn to scope, evaluate and ship AI features without over-promising what the model can do."
+    },
+    {
+      "title": "Business & Technical Leads",
+      "desc": "Work better with AI and data teams by understanding what's genuinely possible \u2014 and what isn't."
+    },
+    {
+      "title": "Anyone Ready To Commit",
+      "desc": "Weekly live classes over three months \u2014 built for someone serious about finishing what they start."
+    }
+  ],
+  "walk_away": [
+    "A working grasp of AI, ML & Generative AI at a Product Management level",
+    "A complete, portfolio-ready AI product case study \u2014 from opportunity to GTM",
+    "The ability to scope, evaluate & ship AI-powered product features",
+    "A working AI evaluation & responsible AI risk framework you built yourself"
+  ],
+  "format_facts": [
+    "12 live classes, 2 hours each, once a week, over 3 months",
+    "Pre-reads before every class, case study during",
+    "A live capstone AI product built progressively across the program",
+    "Direct mentorship access to your facilitator throughout"
+  ],
+  "facilitator_headline": "Learn AI Product Management from someone building it, not just teaching it.",
+  "facilitator_bio": "Jed is a Senior Product Manager and AI-augmented product leader whose work spans fintech, healthcare and travel-tech \u2014 owning real product decisions, sprint execution and cross-functional delivery, not just training slides. He has trained and mentored professionals across Nigeria, Canada, the UK, the USA and West Africa, and has spent recent years building hands-on fluency in how AI systems are actually scoped, evaluated and shipped as products, not just experimented with in a notebook.",
+  "facilitator_cards": [
+    {
+      "title": "Cross-Industry Practice",
+      "desc": "Real Senior PM experience spanning fintech, healthcare and travel-tech \u2014 not a single-domain background."
+    },
+    {
+      "title": "AI-Augmented Practitioner",
+      "desc": "Works daily with LLMs, evaluation tooling and AI workflows \u2014 not just AI product theory."
+    },
+    {
+      "title": "Trainer & Coach",
+      "desc": "Years of experience facilitating Product, Agile and AI Product Management training across multiple continents."
+    }
+  ],
+  "core_title": "Everything Inside the 12 Weeks",
+  "included": [
+    "All 12 live weekly classes, case-study led",
+    "Pre-read materials before every session",
+    "A live AI capstone product, built and refined week by week",
+    "Live Q&A after every class",
+    "Direct mentorship access throughout"
+  ],
+  "addon": [
+    "Learn how to optimize your own LinkedIn profile",
+    "Learn how to structure and tailor your own CV",
+    "Coaching on the process, not a done-for-you service",
+    "Scope & terms agreed directly with your facilitator"
+  ],
+  "bands": [
+    {
+      "title": "Live",
+      "sub": "ONLINE CLASSES, WEEKLY"
+    },
+    {
+      "title": "Applied",
+      "sub": "BUILT ON A REAL CAPSTONE PRODUCT"
+    },
+    {
+      "title": "Direct",
+      "sub": "ACCESS TO YOUR FACILITATOR"
+    }
+  ],
+  "cta_headline": "Start your AI Product Management journey.",
+  "cta_sub": "Reach out to discuss your start date and program investment. Spots are limited to keep the class properly hands-on.",
+  "program_tagline": "AI Product Management Program",
+  "facilitator_team_line": "Every live session is led by OIStride Academy's trained facilitators \u2014 coached to teach the way this program was designed: hands-on, case-study-led, and outcome-focused."
+}

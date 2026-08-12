@@ -1,0 +1,309 @@
+{
+  "footer_label": "PRODUCT MANAGEMENT",
+  "facilitator_role": "Product Leader & Coach",
+  "hero_eyebrow": "12-WEEK LIVE PROGRAM",
+  "hero_title": "Product Management",
+  "hero_sub": "A hands-on, case-study-driven program where you learn Product Management the way real product teams practice it \u2014 from discovery to strategy, delivery, launch and growth \u2014 then walk away with a portfolio-ready product case study.",
+  "hero_pills": [
+    "Live Weekly Classes",
+    "Case-Study Led",
+    "Built On A Live Capstone Product"
+  ],
+  "hero_cards": [
+    {
+      "code": "PM-04",
+      "title": "Product Vision & Strategy",
+      "color": "#6C63FF"
+    },
+    {
+      "code": "PM-06",
+      "title": "PRDs & Product Design",
+      "color": "#3ECF8E"
+    },
+    {
+      "code": "PM-09",
+      "title": "Roadmaps & Go-To-Market",
+      "color": "#F5A623"
+    }
+  ],
+  "how_headline": "Built like a real product team \u2014 every single week.",
+  "how_sub": "This isn't a lecture series. Every week follows the same rhythm real product teams use: prepare, work the case, apply it to your own capstone product, get feedback.",
+  "format_stats": [
+    {
+      "num": "2 Hr",
+      "label": "Per Live Session"
+    },
+    {
+      "num": "12",
+      "label": "Live Weekly Sessions"
+    },
+    {
+      "num": "3",
+      "label": "Months, Start To Finish"
+    },
+    {
+      "num": "Direct",
+      "label": "Access To Your Facilitator"
+    }
+  ],
+  "steps": [
+    {
+      "title": "Pre-Read Sent",
+      "desc": "Reading material for the week is sent ahead of class, so you walk in already familiar with the topic."
+    },
+    {
+      "title": "Live Case Study",
+      "desc": "The live class works through a real-world product case study built around that week's topic \u2014 not just theory."
+    },
+    {
+      "title": "Build On Your Capstone",
+      "desc": "Every week you apply what you learned to your own product, building a portfolio-ready case study as the program progresses."
+    },
+    {
+      "title": "Direct Access",
+      "desc": "Mentorship access to your facilitator throughout the program \u2014 for questions between classes too."
+    }
+  ],
+  "phases": [
+    {
+      "title": "Discover",
+      "weeks": "1\u20134",
+      "desc": "Where every product professional has to start \u2014 understanding users, discovering real problems, and defining a product vision and strategy worth building.",
+      "color": "#6C63FF"
+    },
+    {
+      "title": "Build",
+      "weeks": "5\u20138",
+      "desc": "Where it becomes real \u2014 solution discovery, MVPs, writing PRDs and user stories, and delivering with Agile, Scrum and stakeholder management.",
+      "color": "#3ECF8E"
+    },
+    {
+      "title": "Launch, Measure & Grow",
+      "weeks": "9\u201312",
+      "desc": "The skills teams actually pay for \u2014 roadmaps, go-to-market, product metrics, growth, monetization, and leading products through ambiguity.",
+      "color": "#F5A623"
+    }
+  ],
+  "weeks": [
+    {
+      "week": 1,
+      "code": "PM-01",
+      "title": "Product Management Foundations",
+      "application": "APPLICATION: PRODUCT TEARDOWN",
+      "bullets": [
+        "What Product Management actually is, and what a PM does day to day",
+        "Product Manager vs Project Manager vs Program Manager",
+        "Product thinking: outcomes over outputs, and customer-centric decisions"
+      ]
+    },
+    {
+      "week": 2,
+      "code": "PM-02",
+      "title": "Users, Customers & Product Discovery",
+      "application": "APPLICATION: DESIGN A USER RESEARCH EXERCISE",
+      "bullets": [
+        "User vs customer, segments, personas & the 80/20 rule",
+        "Qualitative & quantitative research: interviews, surveys & observation",
+        "Turning customer feedback into validated product insight"
+      ]
+    },
+    {
+      "week": 3,
+      "code": "PM-03",
+      "title": "Problem Discovery, Validation & Market Analysis",
+      "application": "APPLICATION: VALIDATE A REAL PRODUCT PROBLEM",
+      "bullets": [
+        "Framing problem statements & separating symptoms from root problems",
+        "Validating assumptions with evidence, not opinion",
+        "Market & competitive research, and assessing real opportunity"
+      ]
+    },
+    {
+      "week": 4,
+      "code": "PM-04",
+      "title": "Product Vision, Strategy & Business Model",
+      "application": "APPLICATION: DEVELOP A PRODUCT STRATEGY",
+      "bullets": [
+        "Product vision vs strategy vs roadmap \u2014 and why the difference matters",
+        "Value Proposition Canvas & Business Model Canvas",
+        "Setting product goals, KPIs & OKRs that connect to business strategy"
+      ]
+    },
+    {
+      "week": 5,
+      "code": "PM-05",
+      "title": "Solution Discovery, Ideation & MVP",
+      "application": "APPLICATION: DESIGN AN MVP EXPERIMENT",
+      "bullets": [
+        "Moving from problem to solution: ideation, design thinking & validation",
+        "What an MVP actually is \u2014 and the most common ways teams get it wrong",
+        "Designing MVP experiments with clear learning objectives & success criteria"
+      ]
+    },
+    {
+      "week": 6,
+      "code": "PM-06",
+      "title": "Product Requirements & Product Design",
+      "application": "APPLICATION: WRITE A PRD & USER STORIES",
+      "bullets": [
+        "Structuring a PRD that teams can actually build from",
+        "Writing user stories, epics & acceptance criteria that hold up under scrutiny",
+        "Working with design & engineering: feasibility, trade-offs & ambiguity"
+      ]
+    },
+    {
+      "week": 7,
+      "code": "PM-07",
+      "title": "Prioritization, Backlog & Product Planning",
+      "application": "APPLICATION: PRIORITIZE A PRODUCT BACKLOG",
+      "bullets": [
+        "Prioritization frameworks: MoSCoW, RICE, Kano & Value vs Complexity",
+        "Managing a healthy backlog: epics, features, bugs & technical debt",
+        "Release planning around outcomes, not just output"
+      ]
+    },
+    {
+      "week": 8,
+      "code": "PM-08",
+      "title": "Agile Delivery, Scrum & Stakeholder Management",
+      "application": "APPLICATION: SIMULATE A DELIVERY CYCLE",
+      "bullets": [
+        "Agile principles & Scrum in practice: sprints, ceremonies & roles",
+        "Managing delivery risk, scope & technical debt with engineering teams",
+        "Stakeholder mapping, negotiation & influencing without authority"
+      ]
+    },
+    {
+      "week": 9,
+      "code": "PM-09",
+      "title": "Product Roadmaps, Launch & Go-To-Market",
+      "application": "APPLICATION: BUILD A ROADMAP & LAUNCH PLAN",
+      "bullets": [
+        "Outcome-based roadmaps vs feature lists \u2014 and how to communicate them",
+        "Launch planning: readiness, internal & external launch, post-launch review",
+        "Go-to-market: positioning, messaging & sales enablement"
+      ]
+    },
+    {
+      "week": 10,
+      "code": "PM-10",
+      "title": "Product Metrics, Analytics & Experimentation",
+      "application": "APPLICATION: DESIGN A MEASUREMENT FRAMEWORK",
+      "bullets": [
+        "North Star metrics, leading vs lagging indicators, avoiding vanity metrics",
+        "Funnel metrics: acquisition, activation, retention, churn & NPS",
+        "Running A/B tests & experiments that actually change decisions"
+      ]
+    },
+    {
+      "week": 11,
+      "code": "PM-11",
+      "title": "Product Growth, Monetization & Product-Market Fit",
+      "application": "APPLICATION: BUILD A GROWTH & MONETIZATION STRATEGY",
+      "bullets": [
+        "Identifying & measuring real product-market fit",
+        "Growth loops, retention strategy & conversion optimization",
+        "Monetization models: subscription, freemium, usage-based & value-based pricing"
+      ]
+    },
+    {
+      "week": 12,
+      "code": "PM-12",
+      "title": "Product Leadership, Career Readiness & Capstone",
+      "application": "APPLICATION: PRESENT THE END-TO-END PRODUCT",
+      "bullets": [
+        "Product leadership: decision-making under ambiguity & cross-functional influence",
+        "Building a portfolio-ready product case study that shows real thinking",
+        "Presenting your complete, end-to-end Product Management capstone"
+      ]
+    }
+  ],
+  "who_headline": "Built for people who need this to actually work.",
+  "who_sub": "No prior Product Management experience required \u2014 the program starts from the fundamentals and builds up to advanced, tool-based product practice.",
+  "personas": [
+    {
+      "title": "Aspiring & Junior PMs",
+      "desc": "Learn the tools and frameworks to kickstart a product management career with confidence."
+    },
+    {
+      "title": "Career Switchers",
+      "desc": "Build job-ready, practical skills that stand out immediately in interviews and on the job."
+    },
+    {
+      "title": "Business Analysts",
+      "desc": "Round out your skill set with structured product discipline and hands-on delivery experience."
+    },
+    {
+      "title": "Founders & Freelancers",
+      "desc": "Learn to discover real problems, define strategy and ship products on schedule."
+    },
+    {
+      "title": "Tech & Ops Professionals",
+      "desc": "Work better with product and engineering teams by speaking their language."
+    },
+    {
+      "title": "Anyone Ready To Commit",
+      "desc": "Weekly live classes over three months \u2014 built for someone serious about finishing what they start."
+    }
+  ],
+  "walk_away": [
+    "A working grasp of Product Management, tested against real case studies",
+    "A complete, portfolio-ready product case study \u2014 from discovery to growth",
+    "The ability to run discovery, define strategy & manage delivery end-to-end",
+    "A prioritized backlog, PRD, roadmap and GTM plan you built yourself"
+  ],
+  "format_facts": [
+    "12 live classes, 2 hours each, once a week, over 3 months",
+    "Pre-reads before every class, case study during",
+    "A live capstone product built progressively across the program",
+    "Direct mentorship access to your facilitator throughout"
+  ],
+  "facilitator_headline": "Learn from someone doing the job, not just teaching it.",
+  "facilitator_bio": "Jed is a Senior Product Manager and product leader whose work cuts across industries \u2014 fintech, healthcare, travel, and beyond \u2014 owning real product decisions, sprint execution and cross-functional delivery, not just training slides. He has trained and mentored professionals across Nigeria, Canada, the UK, the USA and West Africa, bringing practical product discipline and modern, AI-augmented ways of working into every session.",
+  "facilitator_cards": [
+    {
+      "title": "Cross-Industry Practice",
+      "desc": "Real Senior PM experience spanning fintech, healthcare and travel-tech \u2014 not a single-domain background."
+    },
+    {
+      "title": "Trainer & Coach",
+      "desc": "Years of experience facilitating Product Management, Agile and Scrum training across multiple continents."
+    },
+    {
+      "title": "Modern PM Toolkit",
+      "desc": "Hands-on fluency across the tools working PMs rely on daily \u2014 Jira, Trello, and AI workflows like ChatGPT & Claude."
+    }
+  ],
+  "core_title": "Everything Inside the 12 Weeks",
+  "included": [
+    "All 12 live weekly classes, case-study led",
+    "Pre-read materials before every session",
+    "A live capstone product, built and refined week by week",
+    "Live Q&A after every class",
+    "Direct mentorship access throughout"
+  ],
+  "addon": [
+    "Learn how to optimize your own LinkedIn profile",
+    "Learn how to structure and tailor your own CV",
+    "Coaching on the process, not a done-for-you service",
+    "Scope & terms agreed directly with your facilitator"
+  ],
+  "bands": [
+    {
+      "title": "Live",
+      "sub": "ONLINE CLASSES, WEEKLY"
+    },
+    {
+      "title": "Applied",
+      "sub": "BUILT ON A REAL CAPSTONE PRODUCT"
+    },
+    {
+      "title": "Direct",
+      "sub": "ACCESS TO YOUR FACILITATOR"
+    }
+  ],
+  "cta_headline": "Start your Product Management journey.",
+  "cta_sub": "Reach out to discuss your start date and program investment. Spots are limited to keep the class properly hands-on.",
+  "program_tagline": "Product Management Program",
+  "facilitator_team_line": "Every live session is led by OIStride Academy's trained facilitators \u2014 coached to teach the way this program was designed: hands-on, case-study-led, and outcome-focused."
+}

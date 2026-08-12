@@ -3,18 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FAQ — OIStride Academy</title>
+<title>Product School — OIStride Academy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body>
+<body class="track-product">
+
 <nav class="nav">
   <div class="container">
     <a href="index.html" class="nav-logo"><img src="assets/img/logo.png" alt="OIStride"></a>
     <div class="nav-links">
       <a href="index.html">Home</a>
-      <div class="dropdown"><a href="index.html#programs">Programs</a>
+      <div class="dropdown">
+        <a href="index.html#programs" class="active">Programs</a>
         <div class="dropdown-panel">
           <div class="track-label">Career Acceleration</div>
           <a href="program-career.html">Land Your First Tech Job</a>
@@ -31,7 +33,9 @@
           <a href="program-ai.html">Build &amp; Test Your Idea Fast with AI</a>
         </div>
       </div>
-      <a href="consulting.html">Consulting</a><a href="about.html">About</a><a href="faq.html" class="active">FAQ</a>
+      <a href="consulting.html">Consulting</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
     </div>
     <div class="nav-cta">
       <div data-auth-slot></div>
@@ -44,30 +48,54 @@
 
 <header class="page-hero">
   <div class="container">
-    <span class="eyebrow">Support</span>
-    <h1>Frequently Asked Questions</h1>
-    <p class="lead">Everything about pricing, format, and how OIStride actually works.</p>
+    <div class="breadcrumb"><a href="index.html">Home</a> / <a href="index.html#programs">Programs</a> / Product School</div>
+    <span class="eyebrow">Product School</span>
+    <h1>Product School</h1>
+    <p class="lead">Two 12-week, live cohort bootcamps for people who want to own product decisions end to end — one for core Product Management, one for building and shipping AI-powered products.</p>
   </div>
 </header>
 
+<section class="section" id="programs">
+  <div class="container">
+    <div class="program-grid">
+
+      <div class="program-card track-product reveal">
+        <div class="program-top">
+          <span class="program-badge">Product</span>
+          <h3>Product Management</h3>
+          <p class="desc">Own product decisions end to end — discovery, strategy, delivery, launch and growth — and leave with a portfolio-ready product case study.</p>
+        </div>
+        <div class="program-meta">
+          <span>◆ 12 weeks</span><span>◆ Certificate</span>
+        </div>
+        <div class="program-bottom">
+          <a href="program-product-management.html" class="btn btn-primary btn-block">View Program</a>
+        </div>
+      </div>
+
+      <div class="program-card track-ai reveal">
+        <div class="program-top">
+          <span class="program-badge">AI</span>
+          <h3>AI Product Management</h3>
+          <p class="desc">Learn to identify, design, evaluate and ship AI-powered products, from opportunity to go-to-market, with a portfolio-ready AI case study.</p>
+        </div>
+        <div class="program-meta">
+          <span>◆ 12 weeks</span><span>◆ Certificate</span>
+        </div>
+        <div class="program-bottom">
+          <a href="program-ai-product-management.html" class="btn btn-primary btn-block">View Program</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <section class="section">
-  <div class="container" style="max-width:760px;">
-
-    <h3 style="font-size:15px; text-transform:uppercase; letter-spacing:0.06em; color:var(--indigo); margin-bottom:12px;">Pricing &amp; Payment</h3>
-    <div class="faq-item reveal"><button class="faq-q">How much do programs cost?<span class="plus">+</span></button><div class="faq-a"><div class="faq-a-inner">Pricing varies by program. Career Acceleration and AI Fluency services are priced individually per service. The Agile Project Management cohort's investment is shown on its program page, with a 70/30 installment option available.</div></div></div>
-    <div class="faq-item reveal"><button class="faq-q">Is there a payment plan?<span class="plus">+</span></button><div class="faq-a"><div class="faq-a-inner">Yes. Every paid program offers a 70/30 installment: 70% before resuming (to secure your seat), and the remaining 30% at the start of your second month.</div></div></div>
-    <div class="faq-item reveal"><button class="faq-q">What's your refund policy?<span class="plus">+</span></button><div class="faq-a"><div class="faq-a-inner">[ Placeholder, confirm actual refund policy with Jed before publishing. This cannot go live without a real answer. ]</div></div></div>
-
-    <h3 style="font-size:15px; text-transform:uppercase; letter-spacing:0.06em; color:var(--indigo); margin:40px 0 12px;">Format &amp; Commitment</h3>
-    <div class="faq-item reveal"><button class="faq-q">Are sessions live or recorded?<span class="plus">+</span></button><div class="faq-a"><div class="faq-a-inner">All core sessions are live. Recordings are shared with enrolled students afterward, but the case-study work is built for live participation.</div></div></div>
-    <div class="faq-item reveal"><button class="faq-q">How much time do I need per week?<span class="plus">+</span></button><div class="faq-a"><div class="faq-a-inner">This varies by program. The Agile Project Management cohort runs about 1 hour of live class per week plus a short pre-read. Career and AI services are typically 1 to 3 sessions total, no ongoing weekly commitment.</div></div></div>
-
-    <h3 style="font-size:15px; text-transform:uppercase; letter-spacing:0.06em; color:var(--indigo); margin:40px 0 12px;">Organisations</h3>
-    <div class="faq-item reveal"><button class="faq-q">Do you offer corporate/team training?<span class="plus">+</span></button><div class="faq-a"><div class="faq-a-inner">Yes. The AI Fluency track has a dedicated team/corporate option, and custom corporate training is available through <a href="consulting.html" style="color:var(--indigo); font-weight:600;">Consulting</a>. Book a free consultation to discuss your team's needs.</div></div></div>
-
-    <h3 style="font-size:15px; text-transform:uppercase; letter-spacing:0.06em; color:var(--indigo); margin:40px 0 12px;">Still Have Questions?</h3>
-    <div class="faq-item reveal"><button class="faq-q">What if my question isn't answered here?<span class="plus">+</span></button><div class="faq-a"><div class="faq-a-inner">Book a free consultation, or reach out directly on WhatsApp or email, both linked in the footer. <a href="book-a-call.html" style="color:var(--indigo); font-weight:600;">Book here</a>.</div></div></div>
-
+  <div class="container final-cta reveal">
+    <h2 style="color:var(--navy);">Not sure which one fits?</h2>
+    <p style="color:var(--grey);">Book a free consultation and Jed will help you pick the right starting point.</p>
+    <div class="hero-actions"><a href="book-a-call.html" class="btn btn-primary">Book a Free Consultation</a></div>
   </div>
 </section>
 
@@ -93,6 +121,11 @@
     <div class="footer-bottom"><span>© 2026 OIStride Limited. All rights reserved.</span><span><a href="#">Privacy Policy</a> &nbsp;·&nbsp; <a href="#">Terms of Service</a></span></div>
   </div>
 </footer>
+
+<div class="sticky-mobile-cta">
+  <a href="#programs" class="btn btn-primary">View Programs</a>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/supabase-config.js"></script>
 <script src="assets/js/auth.js"></script>

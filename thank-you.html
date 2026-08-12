@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thank You — OIStride</title>
+<title>Thank You — OIStride Academy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
@@ -41,11 +41,21 @@
   const brochureLink = document.getElementById('ty-brochure-link');
   const copy = {
     brochure: ["Your brochure is ready.", "Download it below. We've also sent a copy to your email. Ready to take the next step? You can enroll anytime."],
+    'brochure-pm': ["Your brochure is ready.", "Download it below. We've also sent a copy to your email. Ready to take the next step? You can enroll anytime."],
+    'brochure-aipm': ["Your brochure is ready.", "Download it below. We've also sent a copy to your email. Ready to take the next step? You can enroll anytime."],
     payment: ["Payment successful, you're in.", "You've secured your seat. A confirmation email is on its way, along with your cohort community invite (WhatsApp/community group) within 24 hours."],
     call: ["Request received.", "Jed will confirm a time with you shortly by email or WhatsApp."]
   };
+  const brochureFiles = {
+    brochure: "assets/downloads/OIStride_PM_Mastery_Brochure.pdf",
+    'brochure-pm': "assets/downloads/OIStride_Product_Management_Brochure.pdf",
+    'brochure-aipm': "assets/downloads/OIStride_AI_Product_Management_Brochure.pdf"
+  };
   if (type && copy[type]) { heading.textContent = copy[type][0]; body.textContent = copy[type][1]; }
-  if (type === 'brochure') { brochureLink.classList.remove('hidden'); }
+  if (type && brochureFiles[type]) {
+    brochureLink.href = brochureFiles[type];
+    brochureLink.classList.remove('hidden');
+  }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/supabase-config.js"></script>
