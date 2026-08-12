@@ -146,6 +146,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Hero cursor glow + visual tilt (homepage only — heroEl/glow only exist there)
+  const heroEl = document.getElementById('heroEl');
+  const glow = document.getElementById('glow');
+  const heroVisual = document.getElementById('heroVisual');
+  if (heroEl && glow) {
+    heroEl.addEventListener('mousemove', (e) => {
+      const r = heroEl.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      glow.style.left = x + 'px';
+      glow.style.top = y + 'px';
+      if (heroVisual) {
+        const cx = (x / r.width - 0.5) * 14;
+        const cy = (y / r.height - 0.5) * 14;
+        heroVisual.style.transform = `rotateY(${cx}deg) rotateX(${-cy}deg)`;
+      }
+    });
+  }
+
   // Newsletter forms
   document.querySelectorAll('.newsletter-form').forEach(f => {
     f.addEventListener('submit', (e) => {
