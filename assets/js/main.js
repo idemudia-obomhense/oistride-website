@@ -11,8 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
       links.classList.remove('mobile-open');
       toggle.classList.remove('active');
       document.body.style.overflow = '';
-      const dropdown = links.querySelector('.dropdown');
-      if (dropdown) dropdown.classList.remove('open');
     };
     toggle.addEventListener('click', () => {
       const isOpen = links.classList.toggle('mobile-open');
@@ -20,24 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.style.overflow = isOpen ? 'hidden' : '';
     });
 
-    // "Programs" becomes a collapsed-by-default accordion on mobile —
-    // tap toggles it open/closed instead of navigating away, so the full
-    // sub-service list never renders expanded by default (the reported
-    // bug). Desktop keeps its normal click-through + hover behavior.
-    const dropdownTrigger = links.querySelector('.dropdown > a');
-    if (dropdownTrigger) {
-      dropdownTrigger.addEventListener('click', (e) => {
-        if (links.classList.contains('mobile-open')) {
-          e.preventDefault();
-          dropdownTrigger.parentElement.classList.toggle('open');
-        }
-      });
-    }
-
-    // Any other link (top-level or a program sub-link) navigates away,
-    // so close the whole menu behind it.
+    // Any link navigates away, so close the whole menu behind it.
     links.querySelectorAll('a').forEach((a) => {
-      if (a === dropdownTrigger) return;
       a.addEventListener('click', closeMenu);
     });
     window.addEventListener('resize', () => {
@@ -162,6 +144,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const cy = (y / r.height - 0.5) * 14;
         heroVisual.style.transform = `rotateY(${cx}deg) rotateX(${-cy}deg)`;
       }
+    });
+  }
+
+  // Programs catalog filter pills — show/hide track sections, scroll to the
+  // chosen one (skipped for "all", which just un-hides everything in place).
+  const catFilterPills = document.querySelectorAll('.cat-filter-pill');
+  if (catFilterPills.length) {
+    const catSections = document.querySelectorAll('[data-track]');
+    catFilterPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        catFilterPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        const filter = pill.dataset.filter;
+        catSections.forEach(sec => {
+          sec.classList.toggle('hidden', !(filter === 'all' || sec.dataset.track === filter));
+        });
+        if (filter !== 'all') {
+          const target = document.querySelector(`[data-track="${filter}"]`);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
     });
   }
 

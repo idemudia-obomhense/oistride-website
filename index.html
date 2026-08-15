@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body>
+<body class="bg-paper">
 
 <!-- ============ NAV ============ -->
 <nav class="nav">
@@ -17,24 +17,7 @@
     <a href="index.html" class="nav-logo"><img src="assets/img/logo.png" alt="OIStride"></a>
     <div class="nav-links">
       <a href="index.html" class="active">Home</a>
-      <div class="dropdown">
-        <a href="#programs">Programs</a>
-        <div class="dropdown-panel">
-          <div class="track-label">Career Acceleration</div>
-          <a href="program-career.html">Land Your First Tech Job</a>
-          <a href="program-career.html">Interview Mastery &amp; Job Search Strategy</a>
-          <a href="program-career.html">Find Your Path in Tech</a>
-          <div class="track-label">Agile Project Management</div>
-          <a href="program-agile-project-management.html">Agile Project Management</a>
-          <div class="track-label">Product School</div>
-          <a href="program-product-management.html">Product Management</a>
-          <a href="program-ai-product-management.html">AI Product Management</a>
-          <div class="track-label">AI Fluency &amp; Building</div>
-          <a href="program-ai.html">Understanding AI in Today's World</a>
-          <a href="program-ai.html">From Idea to Validated Business</a>
-          <a href="program-ai.html">Build &amp; Test Your Idea Fast with AI</a>
-        </div>
-      </div>
+      <a href="programs-catalog.html">Programs</a>
       <a href="consulting.html">Consulting</a>
       <a href="about.html">About</a>
       <a href="faq.html">FAQ</a>
@@ -50,10 +33,11 @@
 
 <!-- ============ HERO ============ -->
 <header class="hero" id="heroEl">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-  <div class="orb orb-4"></div>
+  <div class="hero-blob hero-blob-b1"></div>
+  <div class="hero-blob hero-blob-b2"></div>
+  <div class="hero-blob hero-blob-b3"></div>
+  <div class="hero-blob hero-blob-b4"></div>
+  <div class="hero-blob hero-blob-b5"></div>
   <div class="grid-overlay"></div>
   <div class="cursor-glow" id="glow"></div>
 
@@ -61,18 +45,18 @@
     <div class="stride-ring"></div>
     <svg viewBox="0 0 260 300" style="position:absolute; inset:0; width:100%; height:100%;">
       <path d="M30,260 C 70,230 60,180 110,160 S 190,120 230,50" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="2" stroke-dasharray="1 10" stroke-linecap="round"/>
-      <circle class="stride-dot sd-1" cx="30" cy="260" r="9" fill="#F5A623"/>
-      <circle class="stride-dot sd-2" cx="93" cy="192" r="9" fill="#2EC4B6"/>
-      <circle class="stride-dot sd-3" cx="160" cy="132" r="9" fill="#6F7EB2"/>
-      <circle class="stride-dot sd-4" cx="230" cy="50" r="9" fill="#64748B"/>
+      <circle class="stride-dot sd-1" cx="30" cy="260" r="9" fill="#FFB020"/>
+      <circle class="stride-dot sd-2" cx="93" cy="192" r="9" fill="#1FC98E"/>
+      <circle class="stride-dot sd-3" cx="160" cy="132" r="9" fill="#6C5CE7"/>
+      <circle class="stride-dot sd-4" cx="230" cy="50" r="9" fill="#22D3EE"/>
     </svg>
     <div class="hero-visual-caption">Your stride path<span>Four tracks, one method</span></div>
   </div>
 
-  <div class="chip-float chip-1"><span class="dot" style="background:#2EC4B6;"></span>AI Product Management</div>
-  <div class="chip-float chip-2"><span class="dot" style="background:#F5A623;"></span>Career Acceleration</div>
-  <div class="chip-float chip-3"><span class="dot" style="background:#6F7EB2;"></span>Agile Project Management</div>
-  <div class="chip-float chip-4"><span class="dot" style="background:#64748B;"></span>Product School</div>
+  <div class="chip-float chip-1"><span class="dot" style="background:linear-gradient(135deg,#6C5CE7,#22D3EE);"></span>AI Product Management</div>
+  <div class="chip-float chip-2"><span class="dot" style="background:#FFB020;"></span>Career Acceleration</div>
+  <div class="chip-float chip-3"><span class="dot" style="background:#6C5CE7;"></span>Agile Project Management</div>
+  <div class="chip-float chip-4"><span class="dot" style="background:#22D3EE;"></span>Product School</div>
 
   <svg class="hero-path" viewBox="0 0 1400 700" preserveAspectRatio="none" aria-hidden="true">
     <path d="M-50,650 C 250,600 350,500 500,470 S 850,420 1450,120" fill="none" stroke="url(#pathGrad)" stroke-width="2" stroke-dasharray="1 12" stroke-linecap="round"/>
@@ -115,17 +99,17 @@
       <p>Whether you're changing careers, building real project management skill, or shaping something new with AI, every track shares the same method: real cases, live practice, direct feedback.</p>
     </div>
     <div class="pillars">
-      <div class="pillar-card reveal">
+      <div class="pillar-card track-career reveal">
         <span class="pillar-tag">Grow</span>
         <h3>Career Acceleration</h3>
         <p>LinkedIn and CV overhauls, interview mastery, and a personalised roadmap into a tech-adjacent career.</p>
       </div>
-      <div class="pillar-card reveal">
+      <div class="pillar-card track-agile reveal">
         <span class="pillar-tag">Learn</span>
         <h3>Agile Project Management</h3>
         <p>An 8-week live cohort covering Agile, Scrum, Waterfall, and real project simulation, taught the way working teams actually operate.</p>
       </div>
-      <div class="pillar-card reveal">
+      <div class="pillar-card track-ai reveal">
         <span class="pillar-tag">Build</span>
         <h3>AI Fluency &amp; Building</h3>
         <p>Practical AI literacy, business validation, and a live build-along from idea to working prototype.</p>
@@ -136,6 +120,9 @@
 
 <!-- ============ WHO IT'S FOR ============ -->
 <section class="section section-soft">
+  <div class="corner-blob" style="width:120px; height:120px; background:var(--accent-career); opacity:0.18; bottom:-40px; right:-20px;"></div>
+  <div class="corner-blob" style="width:70px; height:70px; background:var(--accent-agile); opacity:0.8; bottom:60px; right:80px;"></div>
+  <div class="corner-blob" style="width:44px; height:44px; background:var(--accent-ai); opacity:0.85; bottom:10px; right:180px;"></div>
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">Fit Check</span>
@@ -172,6 +159,34 @@
     </div>
     <div class="program-grid">
 
+      <div class="program-card track-product reveal">
+        <div class="program-top">
+          <span class="program-badge">Product</span>
+          <h3>Product School</h3>
+          <p class="desc">Two 12-week bootcamps — Product Management and AI Product Management — for people who want to own product decisions end to end.</p>
+        </div>
+        <div class="program-meta">
+          <span>◆ 2 bootcamps</span><span>◆ 12 weeks each</span>
+        </div>
+        <div class="program-bottom">
+          <a href="program-product-school.html" class="btn btn-primary btn-block">View Programs</a>
+        </div>
+      </div>
+
+      <div class="program-card track-agile reveal">
+        <div class="program-top">
+          <span class="program-badge">Anchor Program</span>
+          <h3>Agile Project Management</h3>
+          <p class="desc">A live, 8-week cohort covering Agile, Scrum, Waterfall, and real project simulation, ending in a certificate.</p>
+        </div>
+        <div class="program-meta">
+          <span>◆ 8 weeks</span><span>◆ Certificate</span>
+        </div>
+        <div class="program-bottom">
+          <a href="program-agile-project-management.html" class="btn btn-primary btn-block">View Program</a>
+        </div>
+      </div>
+
       <div class="program-card track-career reveal">
         <div class="program-top">
           <span class="program-badge">Career</span>
@@ -186,20 +201,6 @@
         </div>
       </div>
 
-      <div class="program-card reveal">
-        <div class="program-top">
-          <span class="program-badge">Anchor Program</span>
-          <h3>Agile Project Management</h3>
-          <p class="desc">A live, 8-week cohort covering Agile, Scrum, Waterfall, and real project simulation, ending in a certificate.</p>
-        </div>
-        <div class="program-meta">
-          <span>◆ 8 weeks</span><span>◆ Certificate</span>
-        </div>
-        <div class="program-bottom">
-          <a href="program-agile-project-management.html" class="btn btn-primary btn-block">View Program</a>
-        </div>
-      </div>
-
       <div class="program-card track-ai reveal">
         <div class="program-top">
           <span class="program-badge">AI</span>
@@ -211,20 +212,6 @@
         </div>
         <div class="program-bottom">
           <a href="program-ai.html" class="btn btn-primary btn-block">View Program</a>
-        </div>
-      </div>
-
-      <div class="program-card track-product reveal">
-        <div class="program-top">
-          <span class="program-badge">Product</span>
-          <h3>Product School</h3>
-          <p class="desc">Two 12-week bootcamps — Product Management and AI Product Management — for people who want to own product decisions end to end.</p>
-        </div>
-        <div class="program-meta">
-          <span>◆ 2 bootcamps</span><span>◆ 12 weeks each</span>
-        </div>
-        <div class="program-bottom">
-          <a href="program-product-school.html" class="btn btn-primary btn-block">View Programs</a>
         </div>
       </div>
 
@@ -357,10 +344,12 @@
 
 <!-- ============ FINAL CTA ============ -->
 <section class="section">
+  <div class="corner-blob" style="width:110px; height:110px; background:var(--accent-product); opacity:0.18; top:-30px; left:-30px;"></div>
+  <div class="corner-blob" style="width:60px; height:60px; background:var(--accent-coral); opacity:0.8; top:60px; left:100px;"></div>
   <div class="container final-cta reveal">
     <span class="eyebrow" style="justify-content:center;">Ready When You Are</span>
-    <h2>Start your OIStride journey.</h2>
-    <p>Explore a program, or talk it through with Jed directly, no pressure, no obligation.</p>
+    <h2 style="color:var(--navy);">Start your OIStride journey.</h2>
+    <p style="color:var(--grey);">Explore a program, or talk it through with Jed directly, no pressure, no obligation.</p>
     <div class="hero-actions">
       <a href="#programs" class="btn btn-primary">Explore Programs</a>
       <a href="book-a-call.html" class="btn btn-outline">Book a Free Consultation</a>
@@ -370,6 +359,8 @@
 
 <!-- ============ FOOTER ============ -->
 <footer class="footer">
+  <div class="corner-blob" style="width:100px; height:100px; background:var(--accent-coral); opacity:0.14; top:-50px; left:-20px;"></div>
+  <div class="corner-blob" style="width:46px; height:46px; background:var(--accent-product); opacity:0.7; top:-10px; left:60px;"></div>
   <div class="container">
     <div class="footer-grid">
       <div>
@@ -379,13 +370,14 @@
       <div>
         <h5>Programs</h5>
         <ul>
-          <li><a href="program-career.html">Career Acceleration</a></li>
-          <li><a href="program-agile-project-management.html">Agile Project Management</a></li>
-          <li><a href="program-product-management.html">Product Management</a></li>
+        <li><a href="programs-catalog.html">All Programs &amp; Services</a></li>
+        <li><a href="program-product-management.html">Product Management</a></li>
         <li><a href="program-ai-product-management.html">AI Product Management</a></li>
-          <li><a href="program-ai.html">AI Fluency &amp; Building</a></li>
-          <li><a href="consulting.html">Consulting</a></li>
-        </ul>
+        <li><a href="program-agile-project-management.html">Agile Project Management</a></li>
+        <li><a href="program-career.html">Career Acceleration</a></li>
+        <li><a href="program-ai.html">AI Fluency &amp; Building</a></li>
+        <li><a href="consulting.html">Consulting</a></li>
+      </ul>
       </div>
       <div>
         <h5>Company</h5>
