@@ -641,6 +641,18 @@ section { position: relative; }
 }
 .form-row input:focus, .form-row select:focus, .form-row textarea:focus { border-color: var(--indigo); outline: none; background: #fff; }
 .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+/* Password show/hide toggle */
+.password-field { position: relative; }
+.password-field input { padding-right: 44px; }
+.password-toggle {
+  position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+  width: 36px; height: 36px; border: none; background: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; color: var(--grey-light);
+  border-radius: 8px; padding: 0;
+}
+.password-toggle:hover { color: var(--grey); background: var(--border); }
+.password-toggle svg { width: 19px; height: 19px; }
 .form-step { display: none; }
 .form-step.active { display: block; animation: fadein 0.3s ease; }
 @keyframes fadein { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }

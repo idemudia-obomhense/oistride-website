@@ -179,4 +179,53 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Password show/hide toggles — signup/signin (auth.js-built modal) and
+  // reset-password.html all use the same .password-field/[data-password-toggle]
+  // markup, so one handler covers every instance on the page.
+  document.querySelectorAll('[data-password-toggle]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const field = btn.closest('.password-field');
+      const input = field.querySelector('input');
+      const eye = field.querySelector('.icon-eye');
+      const eyeOff = field.querySelector('.icon-eye-off');
+      const reveal = input.type === 'password';
+      input.type = reveal ? 'text' : 'password';
+      // Note: the native `hidden` attribute doesn't reliably apply to inline
+      // <svg> elements in all browsers, so these icons use the site's
+      // existing .hidden { display:none !important } utility class instead.
+      eye.classList.toggle('hidden', reveal);
+      eyeOff.classList.toggle('hidden', !reveal);
+      btn.setAttribute('aria-label', reveal ? 'Hide password' : 'Show password');
+    });
+  });
+
+  // Dynamic cohort dates — next 3 upcoming months from today, generated once
+  // here so checkout.html and the three program pages' cohort dropdowns
+  // (and the "Next Cohort" label) can't go stale again. Starts from next
+  // calendar month, not the current one.
+  const cohortSelects = document.querySelectorAll('#cohort-select, #cohort-choice');
+  const nextCohortLabel = document.getElementById('next-cohort-label');
+  if (cohortSelects.length || nextCohortLabel) {
+    const now = new Date();
+    const months = [0, 1, 2].map(i => {
+      const d = new Date(now.getFullYear(), now.getMonth() + 1 + i, 1);
+      return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    });
+    cohortSelects.forEach(sel => {
+      sel.innerHTML = months.map(m => `<option>${m}</option>`).join('');
+    });
+    if (nextCohortLabel) nextCohortLabel.textContent = months[0];
+  }
+
+  // Back button — history.back() when there's history to return to,
+  // otherwise fall through to the anchor's own href (programs-catalog.html).
+  document.querySelectorAll('[data-back-btn]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      if (window.history.length > 1) {
+        e.preventDefault();
+        window.history.back();
+      }
+    });
+  });
+
 });

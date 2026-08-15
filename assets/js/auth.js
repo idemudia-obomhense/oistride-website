@@ -65,7 +65,15 @@
             <div class="form-row"><label>Last name</label><input type="text" name="lastName" autocomplete="family-name" required></div>
             <div class="form-row"><label>Email</label><input type="email" name="email" autocomplete="email" required></div>
             <div class="form-row"><label>Phone number <span class="auth-optional">(optional)</span></label><input type="tel" name="phone" autocomplete="tel"></div>
-            <div class="form-row"><label>Password</label><input type="password" name="password" autocomplete="new-password" minlength="6" required></div>
+            <div class="form-row"><label>Password</label>
+              <div class="password-field">
+                <input type="password" name="password" autocomplete="new-password" minlength="6" required>
+                <button type="button" class="password-toggle" data-password-toggle aria-label="Show password">
+                  <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg class="icon-eye-off hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.6 21.6 0 0 1 5.06-6.06M9.9 4.24A10.4 10.4 0 0 1 12 4c7 0 11 8 11 8a21.6 21.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+            </div>
             <div class="auth-error" hidden></div>
             <button type="submit" class="btn btn-primary btn-block">Continue</button>
           </form>
@@ -76,7 +84,15 @@
           <h2>Log in to OIStride</h2>
           <form data-form="signin">
             <div class="form-row"><label>Email</label><input type="email" name="email" autocomplete="email" required></div>
-            <div class="form-row"><label>Password</label><input type="password" name="password" autocomplete="current-password" required></div>
+            <div class="form-row"><label>Password</label>
+              <div class="password-field">
+                <input type="password" name="password" autocomplete="current-password" required>
+                <button type="button" class="password-toggle" data-password-toggle aria-label="Show password">
+                  <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg class="icon-eye-off hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.6 21.6 0 0 1 5.06-6.06M9.9 4.24A10.4 10.4 0 0 1 12 4c7 0 11 8 11 8a21.6 21.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+            </div>
             <div class="auth-forgot"><a href="#" data-switch="forgot">Forgot password?</a></div>
             <div class="auth-error" hidden></div>
             <button type="submit" class="btn btn-primary btn-block">Log In</button>
@@ -260,7 +276,13 @@
   async function signOut() {
     await client.auth.signOut();
     currentSession = null;
-    window.location.href = 'index.html';
+    // checkout.html requires a session to make sense, so redirect away from
+    // it; everywhere else, just re-render the nav back to "Sign In" in place.
+    if (/checkout\.html$/.test(window.location.pathname)) {
+      window.location.href = 'index.html';
+      return;
+    }
+    refreshNavState();
   }
 
   // ---------------------------------------------------------------------
