@@ -180,10 +180,18 @@ section { position: relative; }
 .user-menu-trigger:hover { color: var(--indigo); }
 .user-menu-trigger span { font-size: 11px; }
 .user-menu-panel {
-  position: absolute; top: 100%; right: 0; margin-top: 10px;
+  position: absolute; top: 100%; right: 0; margin-top: 8px;
   background: #fff; border: 1px solid var(--border); border-radius: var(--radius-sm);
   box-shadow: var(--shadow); padding: 6px; min-width: 140px;
   opacity: 0; visibility: hidden; transform: translateY(6px); transition: all 0.18s ease;
+}
+/* Small pointer so the panel reads as anchored to the trigger above it,
+   not a disconnected floating box (Brief #9). */
+.user-menu-panel::before {
+  content: ""; position: absolute; top: -5px; right: 14px;
+  width: 10px; height: 10px; background: #fff;
+  border-left: 1px solid var(--border); border-top: 1px solid var(--border);
+  transform: rotate(45deg);
 }
 .user-menu.open .user-menu-panel { opacity: 1; visibility: visible; transform: translateY(0); }
 .user-menu-panel button {
@@ -454,6 +462,13 @@ section { position: relative; }
   background: rgba(255,255,255,0.08); color: #fff; font-family: var(--font-body); font-size: 14px;
 }
 .newsletter-form input::placeholder { color: rgba(255,255,255,0.5); }
+
+/* Below ~480px the input and Subscribe button can't both fit on one row
+   without overflowing (Brief #9) — stack them instead. */
+@media (max-width: 480px) {
+  .newsletter-form { flex-direction: column; min-width: 0; width: 100%; max-width: 100%; }
+  .newsletter-form .btn { width: 100%; }
+}
 
 /* Final CTA */
 .final-cta { text-align: center; }
