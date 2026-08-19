@@ -255,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const honey = form.querySelector(".honeypot input");
     if (honey && honey.value) return; // silently drop bot submissions
 
-    if (!program.price) {
+    if (!program.priceValue) {
       // No real pricing yet for this program — same demo behavior as before.
       window.location.href = "thank-you.html?type=payment";
       return;
