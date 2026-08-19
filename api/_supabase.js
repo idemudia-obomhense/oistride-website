@@ -100,18 +100,26 @@ async function getEnrollment(userId, programSlug) {
 // cohort, never the underlying rows, so this is safe to expose via a
 // public "spots left" endpoint. 'started' (signed up, hasn't paid yet)
 // and 'completed' (paid, either plan) both count as a taken seat.
+//
+// Uses `Prefer: count=exact` + the Content-Range response header, NOT
+// `select=count()` — Supabase's hosted PostgREST has aggregate functions
+// disabled by default ("Use of aggregate functions is not allowed", 400),
+// which is what was silently breaking this in production (Brief #8).
+// limit=1 keeps the response body tiny; Content-Range still reports the
+// full matched count regardless of the limit.
 async function countActiveEnrollments(programSlug, cohortStartDate) {
   const key = requireServiceRoleKey();
-  const url = `${SUPABASE_URL}/rest/v1/enrollments?program_slug=eq.${encodeURIComponent(programSlug)}&cohort_start_date=eq.${encodeURIComponent(cohortStartDate)}&status=in.(started,completed)&select=count()`;
+  const url = `${SUPABASE_URL}/rest/v1/enrollments?program_slug=eq.${encodeURIComponent(programSlug)}&cohort_start_date=eq.${encodeURIComponent(cohortStartDate)}&status=in.(started,completed)&select=id&limit=1`;
   const res = await fetch(url, {
-    headers: { apikey: key, Authorization: `Bearer ${key}` },
+    headers: { apikey: key, Authorization: `Bearer ${key}`, Prefer: "count=exact" },
   });
   if (!res.ok) {
     const text = await res.text().catch(() => "");
     throw new Error(`Supabase count failed (${res.status}): ${text}`);
   }
-  const rows = await res.json();
-  return rows[0] ? rows[0].count : 0;
+  const contentRange = res.headers.get("content-range") || "";
+  const total = contentRange.split("/")[1];
+  return total && total !== "*" ? parseInt(total, 10) : 0;
 }
 
 module.exports = { getUserFromAccessToken, upsertEnrollment, getEnrollment, countActiveEnrollments };
