@@ -11,7 +11,25 @@
 
   const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   const PENDING_PROGRAM_KEY = 'oistride_pending_program';
+  const PENDING_COHORT_KEY = 'oistride_pending_cohort';
   const FROM_ENROLL_KEY = 'oistride_pending_from_enroll';
+
+  // Mirrors api/_dates.js's parseCohortMonth — kept as a small duplicate
+  // here rather than a shared import since this is a plain <script>, not a
+  // module, and the two copies are simple enough not to drift.
+  const COHORT_MONTH_NAMES = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
+  ];
+  function parseCohortMonth(label) {
+    if (typeof label !== 'string') return null;
+    const match = label.trim().match(/^([A-Za-z]+)\s+(\d{4})$/);
+    if (!match) return null;
+    const monthIndex = COHORT_MONTH_NAMES.findIndex((m) => m.toLowerCase() === match[1].toLowerCase());
+    if (monthIndex === -1) return null;
+    const mm = String(monthIndex + 1).padStart(2, '0');
+    return `${match[2]}-${mm}-01`;
+  }
 
   window.OIStrideAuth = { client };
 
@@ -199,7 +217,8 @@
 
     const pendingProgram = sessionStorage.getItem(PENDING_PROGRAM_KEY);
     if (pendingProgram && data.user) {
-      await markEnrollmentStarted(data.user.id, pendingProgram);
+      const cohortStartDate = parseCohortMonth(sessionStorage.getItem(PENDING_COHORT_KEY));
+      await markEnrollmentStarted(data.user.id, pendingProgram, cohortStartDate);
     }
 
     if (pendingProgram) {
@@ -288,9 +307,11 @@
   // ---------------------------------------------------------------------
   // Enrollment tracking (drives the "incomplete enrollment" redirect)
   // ---------------------------------------------------------------------
-  async function markEnrollmentStarted(userId, programSlug) {
+  async function markEnrollmentStarted(userId, programSlug, cohortStartDate) {
+    const row = { user_id: userId, program_slug: programSlug, status: 'started' };
+    if (cohortStartDate) row.cohort_start_date = cohortStartDate;
     await client.from('enrollments').upsert(
-      { user_id: userId, program_slug: programSlug, status: 'started' },
+      row,
       { onConflict: 'user_id,program_slug', ignoreDuplicates: false }
     );
   }
@@ -350,6 +371,7 @@
       slot.querySelector('[data-auth-trigger="signin"]').addEventListener('click', (e) => {
         e.preventDefault();
         sessionStorage.removeItem(PENDING_PROGRAM_KEY);
+        sessionStorage.removeItem(PENDING_COHORT_KEY);
         sessionStorage.removeItem(FROM_ENROLL_KEY);
         openModal('signin');
       });
@@ -378,6 +400,16 @@
         }
         sessionStorage.setItem(PENDING_PROGRAM_KEY, slug);
         sessionStorage.setItem(FROM_ENROLL_KEY, '1');
+        // Cohort dropdown (if this program has one) is already showing its
+        // real computed month at click time, so capture it now — this is
+        // what lets a brand-new signup count toward that cohort's "spots
+        // left" before they've even finished paying.
+        const cohortSelect = document.getElementById('cohort-select');
+        if (cohortSelect && cohortSelect.value) {
+          sessionStorage.setItem(PENDING_COHORT_KEY, cohortSelect.value);
+        } else {
+          sessionStorage.removeItem(PENDING_COHORT_KEY);
+        }
         openModal('signup');
       });
     });

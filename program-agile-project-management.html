@@ -172,7 +172,7 @@
             <option>January 2027</option>
           </select>
         </div>
-        <div class="slots-row"><span>Spots left</span><span>7 of 20</span></div>
+        <div class="slots-row"><span>Spots left</span><span id="spots-left-value">7 of 20</span></div>
         <div class="slots-track"><div class="slots-fill" style="width:35%;"></div></div>
 
         <div class="price-toggle" role="tablist">
@@ -293,5 +293,37 @@
 <script src="assets/js/supabase-config.js"></script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/main.js"></script>
+<script>
+// Real "Spots left" (Brief #6) — main.js has already populated the cohort
+// dropdown with real months by the time this runs (it's registered after
+// main.js's own DOMContentLoaded listener), so #cohort-select.value is a
+// real "Month Year" string, not the static placeholder from markup.
+document.addEventListener('DOMContentLoaded', () => {
+  const PROGRAM_SLUG = 'project-management';
+  const select = document.getElementById('cohort-select');
+  const valueEl = document.getElementById('spots-left-value');
+  const fillEl = document.querySelector('.slots-fill');
+  if (!select || !valueEl) return;
+
+  async function refreshSpots() {
+    if (!select.value) return;
+    try {
+      const res = await fetch(`/api/cohort-spots?programSlug=${encodeURIComponent(PROGRAM_SLUG)}&cohortMonth=${encodeURIComponent(select.value)}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      valueEl.textContent = `${data.spotsLeft} of ${data.totalSpots}`;
+      if (fillEl) {
+        const takenPct = Math.min(100, Math.max(0, ((data.totalSpots - data.spotsLeft) / data.totalSpots) * 100));
+        fillEl.style.width = `${takenPct}%`;
+      }
+    } catch (err) {
+      console.error('cohort-spots fetch failed:', err);
+    }
+  }
+
+  refreshSpots();
+  select.addEventListener('change', refreshSpots);
+});
+</script>
 </body>
 </html>

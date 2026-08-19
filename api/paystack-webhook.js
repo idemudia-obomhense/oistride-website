@@ -116,6 +116,7 @@ module.exports = async (req, res) => {
         amount_paid_kobo: amountKobo,
         remaining_balance_kobo: 0,
         installment_status: null,
+        cohort_start_date: metadata.cohort_start_date || null,
         paystack_reference: reference,
       };
     } else if (chargeType === "deposit") {

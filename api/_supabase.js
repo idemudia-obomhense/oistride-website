@@ -82,4 +82,22 @@ async function getEnrollment(userId, programSlug) {
   return rows[0] || null;
 }
 
-module.exports = { getUserFromAccessToken, upsertEnrollment, getEnrollment };
+// Aggregate-only: returns a plain count of enrollments for a program +
+// cohort, never the underlying rows, so this is safe to expose via a
+// public "spots left" endpoint. 'started' (signed up, hasn't paid yet)
+// and 'completed' (paid, either plan) both count as a taken seat.
+async function countActiveEnrollments(programSlug, cohortStartDate) {
+  const key = requireServiceRoleKey();
+  const url = `${SUPABASE_URL}/rest/v1/enrollments?program_slug=eq.${encodeURIComponent(programSlug)}&cohort_start_date=eq.${encodeURIComponent(cohortStartDate)}&status=in.(started,completed)&select=count()`;
+  const res = await fetch(url, {
+    headers: { apikey: key, Authorization: `Bearer ${key}` },
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Supabase count failed (${res.status}): ${text}`);
+  }
+  const rows = await res.json();
+  return rows[0] ? rows[0].count : 0;
+}
+
+module.exports = { getUserFromAccessToken, upsertEnrollment, getEnrollment, countActiveEnrollments };

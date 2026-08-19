@@ -59,7 +59,10 @@ module.exports = async (req, res) => {
     }
 
     const origin = req.headers.origin || `https://${req.headers.host}`;
-    const cohortStartDate = chargeType === "deposit" ? parseCohortMonth(cohortMonth) : null;
+    // Computed for every chargeType (not just 'deposit') so a full-price
+    // payment's cohort is recorded too — /api/cohort-spots.js counts
+    // completed enrollments by cohort_start_date regardless of plan.
+    const cohortStartDate = parseCohortMonth(cohortMonth);
 
     const transaction = await initializeTransaction({
       email: user.email,
