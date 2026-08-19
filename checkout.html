@@ -33,13 +33,13 @@
 
     <div class="form-card reveal">
       <h3 style="font-size:17px; margin-bottom:22px;">Your Details</h3>
-      <form data-demo-form="thank-you.html?type=payment">
+      <form id="checkout-form">
         <div class="honeypot"><input type="text" name="company" tabindex="-1" autocomplete="off"></div>
         <div class="form-grid-2">
-          <div class="form-row"><label>Full name</label><input type="text" required></div>
-          <div class="form-row"><label>Email</label><input type="email" required></div>
+          <div class="form-row"><label>Full name</label><input type="text" name="fullName" required></div>
+          <div class="form-row"><label>Email</label><input type="email" name="email" required></div>
         </div>
-        <div class="form-row"><label>Phone / WhatsApp</label><input type="tel" required></div>
+        <div class="form-row"><label>Phone / WhatsApp</label><input type="tel" name="phone" required></div>
 
         <div id="cohort-field" class="form-row hidden">
           <label>Choose your cohort</label>
@@ -53,13 +53,13 @@
         <div class="form-row">
           <label>Payment method</label>
           <select>
-            <option>Card (Stripe)</option>
             <option>Card / Bank Transfer (Paystack)</option>
           </select>
         </div>
 
-        <button type="submit" class="btn btn-primary btn-block" style="margin-top:8px;">Pay &amp; Confirm Enrollment</button>
-        <p style="font-size:12px; color:var(--grey); text-align:center; margin-top:12px;">🔒 Payments are processed securely. This demo form is not yet connected to a live payment processor.</p>
+        <div class="auth-error" id="checkout-error" hidden></div>
+        <button type="submit" class="btn btn-primary btn-block" id="checkout-submit" style="margin-top:8px;">Pay &amp; Confirm Enrollment</button>
+        <p style="font-size:12px; color:var(--grey); text-align:center; margin-top:12px;">🔒 Payments are processed securely via Paystack.</p>
       </form>
     </div>
 
@@ -94,9 +94,9 @@
 
 <script>
 const PROGRAMS = {
-  "project-management": { name: "Agile Project Management", cohort: true },
-  "product-management": { name: "Product Management", cohort: true },
-  "ai-product-management": { name: "AI Product Management", cohort: true },
+  "project-management": { name: "Agile Project Management", cohort: true, price: "₦250,000", anchorPrice: "₦350,000" },
+  "product-management": { name: "Product Management", cohort: true, price: "₦250,000", anchorPrice: "₦350,000" },
+  "ai-product-management": { name: "AI Product Management", cohort: true, price: "₦300,000", anchorPrice: "₦400,000" },
   "land-your-first-tech-job": { name: "Land Your First Tech Job", cohort: false },
   "interview-mastery": { name: "Interview Mastery & Job Search Strategy", cohort: false },
   "find-your-path": { name: "Find Your Path in Tech", cohort: false },
@@ -111,10 +111,88 @@ document.getElementById("co-program-name").textContent = program.name;
 if (program.cohort) {
   document.getElementById("cohort-field").classList.remove("hidden");
 }
+// Only the 3 priced programs get real numbers — everything else keeps the
+// static "[ Price ]" placeholder rather than guessing a figure.
+if (program.price) {
+  document.querySelectorAll(".price-line").forEach((el) => {
+    el.innerHTML = `${program.price} <span class="price-was">${program.anchorPrice}</span>`;
+  });
+}
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/supabase-config.js"></script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/main.js"></script>
+<script>
+// Real Paystack flow for the 3 priced programs — server-initialized (see
+// /api/paystack-initialize.js), never trusting anything client-side for
+// the actual charge amount. Programs without real pricing yet keep the
+// old front-end-only demo redirect, unchanged.
+(function () {
+  const form = document.getElementById("checkout-form");
+  const submitBtn = document.getElementById("checkout-submit");
+  const errorEl = document.getElementById("checkout-error");
+
+  function showError(message) {
+    errorEl.textContent = message;
+    errorEl.hidden = false;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorEl.hidden = true;
+
+    const honey = form.querySelector(".honeypot input");
+    if (honey && honey.value) return; // silently drop bot submissions
+
+    if (!program.price) {
+      // No real pricing yet for this program — same demo behavior as before.
+      window.location.href = "thank-you.html?type=payment";
+      return;
+    }
+
+    const original = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Starting payment…";
+
+    try {
+      const { data: { session } } = await OIStrideAuth.client.auth.getSession();
+      if (!session) {
+        showError("Your session expired — please sign in again and retry.");
+        return;
+      }
+
+      const activeTab = document.querySelector(".price-toggle button.active");
+      const chargeType = activeTab && activeTab.dataset.priceTab === "split" ? "deposit" : "full";
+      const cohortMonth = program.cohort ? document.getElementById("cohort-choice").value : null;
+
+      const res = await fetch("/api/paystack-initialize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          programSlug: slug,
+          chargeType,
+          accessToken: session.access_token,
+          cohortMonth,
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        showError(data.error || "Couldn't start payment. Please try again.");
+        return;
+      }
+
+      window.location.href = data.authorization_url;
+    } catch (err) {
+      console.error(err);
+      showError("Couldn't start payment. Please check your connection and try again.");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = original;
+    }
+  });
+})();
+</script>
 </body>
 </html>

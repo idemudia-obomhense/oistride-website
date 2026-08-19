@@ -61,5 +61,49 @@
 <script src="assets/js/supabase-config.js"></script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/main.js"></script>
+<script>
+// Paystack redirects here with ?reference=... (and ?trxref=...) after the
+// hosted checkout. The redirect itself proves nothing — a user could hit
+// this URL by hand — so on ?type=payment we ask the server to confirm the
+// charge actually succeeded (/api/paystack-verify) before showing a
+// success message. The actual enrollment record is written by the webhook
+// (api/paystack-webhook.js), which runs independently of this page; the
+// markEnrollmentCompleted() call below is only a best-effort client-side
+// UI sync so the account area doesn't look stale if the user lands here
+// before the webhook has finished, not the source of truth.
+(async function () {
+  if (type !== 'payment') return;
+  const reference = params.get('reference') || params.get('trxref');
+  if (!reference) return;
+
+  heading.textContent = "Confirming your payment…";
+  body.textContent = "Hang tight while we confirm this with Paystack.";
+
+  try {
+    const res = await fetch(`/api/paystack-verify?reference=${encodeURIComponent(reference)}`);
+    const data = await res.json();
+
+    if (!res.ok || data.status !== 'success') {
+      heading.textContent = "We couldn't confirm this payment yet.";
+      body.textContent = "If you were charged, this can just be a brief delay — check your email for a receipt, or contact us if it doesn't arrive shortly.";
+      return;
+    }
+
+    const programLabel = data.programName ? ` for ${data.programName}` : "";
+    heading.textContent = "Payment successful, you're in.";
+    body.textContent = data.chargeType === 'deposit'
+      ? `You've secured your seat${programLabel} with your 70% deposit. A confirmation email is on its way, along with your cohort community invite within 24 hours. The remaining 30% will be payable from your account before your second month starts.`
+      : `You've secured your seat${programLabel}. A confirmation email is on its way, along with your cohort community invite (WhatsApp/community group) within 24 hours.`;
+
+    if (data.programSlug && window.OIStrideAuth && typeof window.OIStrideAuth.markEnrollmentCompleted === 'function') {
+      window.OIStrideAuth.markEnrollmentCompleted(data.programSlug).catch(() => {});
+    }
+  } catch (err) {
+    console.error(err);
+    heading.textContent = "We couldn't confirm this payment yet.";
+    body.textContent = "If you were charged, this can just be a brief delay — check your email for a receipt, or contact us if it doesn't arrive shortly.";
+  }
+})();
+</script>
 </body>
 </html>

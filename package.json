@@ -1,0 +1,8 @@
+{
+  "name": "oistride-website",
+  "private": true,
+  "description": "OIStride Academy site — static HTML/CSS/JS with Vercel Serverless Functions under /api for Paystack payments.",
+  "engines": {
+    "node": ">=18"
+  }
+}
