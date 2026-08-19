@@ -94,9 +94,9 @@
 
 <script>
 const PROGRAMS = {
-  "project-management": { name: "Agile Project Management", cohort: true, price: "₦250,000", anchorPrice: "₦350,000" },
-  "product-management": { name: "Product Management", cohort: true, price: "₦250,000", anchorPrice: "₦350,000" },
-  "ai-product-management": { name: "AI Product Management", cohort: true, price: "₦300,000", anchorPrice: "₦400,000" },
+  "project-management": { name: "Agile Project Management", cohort: true, priceValue: 250000, anchorValue: 350000 },
+  "product-management": { name: "Product Management", cohort: true, priceValue: 250000, anchorValue: 350000 },
+  "ai-product-management": { name: "AI Product Management", cohort: true, priceValue: 300000, anchorValue: 400000 },
   "land-your-first-tech-job": { name: "Land Your First Tech Job", cohort: false },
   "interview-mastery": { name: "Interview Mastery & Job Search Strategy", cohort: false },
   "find-your-path": { name: "Find Your Path in Tech", cohort: false },
@@ -112,11 +112,20 @@ if (program.cohort) {
   document.getElementById("cohort-field").classList.remove("hidden");
 }
 // Only the 3 priced programs get real numbers — everything else keeps the
-// static "[ Price ]" placeholder rather than guessing a figure.
-if (program.price) {
-  document.querySelectorAll(".price-line").forEach((el) => {
-    el.innerHTML = `${program.price} <span class="price-was">${program.anchorPrice}</span>`;
-  });
+// static "[ Price ]" placeholder rather than guessing a figure. The 70%
+// deposit shown here must match api/_pricing.js's getDepositKobo exactly
+// (Math.round(price * 0.7)) so what's displayed pre-payment always matches
+// what actually gets charged.
+function nairaFmt(n) { return "₦" + n.toLocaleString("en-US"); }
+if (program.priceValue) {
+  const fullLine = document.querySelector('[data-price-panel="full"] .price-line');
+  fullLine.innerHTML = `${nairaFmt(program.priceValue)} <span class="price-was">${nairaFmt(program.anchorValue)}</span>`;
+
+  const deposit = Math.round(program.priceValue * 0.7);
+  const balance = program.priceValue - deposit;
+  const splitPanel = document.querySelector('[data-price-panel="split"]');
+  splitPanel.querySelector(".price-line").textContent = nairaFmt(deposit);
+  splitPanel.querySelector(".price-note").textContent = `+ ${nairaFmt(balance)} due at the start of your second month · ${nairaFmt(program.priceValue)} total`;
 }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

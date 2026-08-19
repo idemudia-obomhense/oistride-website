@@ -145,6 +145,8 @@ section { position: relative; }
 .btn-outline:hover { border-color: var(--indigo); color: var(--indigo); }
 .btn-block { width: 100%; }
 .btn-sm { padding: 11px 20px; font-size: 13.5px; }
+.btn:disabled { cursor: not-allowed; }
+.btn-primary:disabled:hover, .btn-bloom:disabled:hover { transform: none; }
 
 /* ---------- Nav ---------- */
 .nav {
