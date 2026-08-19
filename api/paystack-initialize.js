@@ -10,7 +10,7 @@
 
 const { getProgramPricing, getDepositKobo } = require("./_pricing");
 const { initializeTransaction } = require("./_paystack");
-const { getUserFromAccessToken, getEnrollment } = require("./_supabase");
+const { getUserFromAccessToken, getEnrollment, hasCompletedEnrollmentForCohort } = require("./_supabase");
 const { parseCohortMonth } = require("./_dates");
 
 module.exports = async (req, res) => {
@@ -39,7 +39,25 @@ module.exports = async (req, res) => {
       return;
     }
 
+    // Computed here (not just for 'deposit') so a full-price payment's
+    // cohort is recorded too — /api/cohort-spots.js counts completed
+    // enrollments by cohort_start_date regardless of plan — and so the
+    // Brief #10 duplicate-enrollment check below can use it.
+    const cohortStartDate = parseCohortMonth(cohortMonth);
+
     let amountKobo;
+    if (chargeType === "full" || chargeType === "deposit") {
+      // Brief #10 — the last line of defense against a duplicate charge:
+      // even if every client-side guard was somehow bypassed, never start
+      // a new full/deposit transaction for a program+cohort this user has
+      // already completed. 'balance' is exempt — it's legitimately
+      // continuing an enrollment that isn't 'completed' yet.
+      if (await hasCompletedEnrollmentForCohort(user.id, programSlug, cohortStartDate)) {
+        res.status(400).json({ error: "You've already completed this program for this cohort. Want to join a future cohort, or need something else? Talk to us at book-a-call.html." });
+        return;
+      }
+    }
+
     if (chargeType === "full") {
       amountKobo = pricing.priceKobo;
     } else if (chargeType === "deposit") {
@@ -59,10 +77,6 @@ module.exports = async (req, res) => {
     }
 
     const origin = req.headers.origin || `https://${req.headers.host}`;
-    // Computed for every chargeType (not just 'deposit') so a full-price
-    // payment's cohort is recorded too — /api/cohort-spots.js counts
-    // completed enrollments by cohort_start_date regardless of plan.
-    const cohortStartDate = parseCohortMonth(cohortMonth);
 
     const transaction = await initializeTransaction({
       email: user.email,

@@ -264,7 +264,8 @@
       // Same completed-program guard as wireEnrollLinks — this is the other
       // way someone reaches checkout via the Enroll gate (they weren't
       // signed in yet at click time, so the guard couldn't run until now).
-      if (await hasCompletedEnrollment(data.user.id, pendingProgram)) {
+      const pendingCohort = sessionStorage.getItem(PENDING_COHORT_KEY);
+      if (await hasCompletedEnrollment(data.user.id, pendingProgram, pendingCohort)) {
         showScreen('already-enrolled');
         return;
       }
@@ -331,21 +332,30 @@
     );
   }
 
-  // Brief #7 — a signed-in user who already finished a program shouldn't
-  // be walked through checkout for it again. Any cohort counts (a user
-  // can now have more than one row per program, one per cohort), so this
-  // just checks whether ANY of them are 'completed'.
-  async function hasCompletedEnrollment(userId, programSlug) {
-    const { data } = await client
+  // Brief #7/#10 — a signed-in user who already finished a program
+  // shouldn't be walked through checkout for it again. Scoped to the
+  // specific cohort being enrolled into when one is known (a completed
+  // enrollment for one cohort month must NOT block a legitimately new one
+  // for a different month — Brief #7's schema now allows multiple rows per
+  // program, one per cohort). Falls back to "any completed row for this
+  // program" when no cohort is known yet (e.g. a non-cohort context).
+  // Exposed on window.OIStrideAuth so checkout.html can run this same
+  // check on its own load, not just at the "Enroll Now" click (Brief #10
+  // — checkout.html is reachable directly via a bookmark, browser
+  // back/forward, or a retyped URL, entirely bypassing that click).
+  async function hasCompletedEnrollment(userId, programSlug, cohortMonthLabel) {
+    const cohortStartDate = parseCohortMonth(cohortMonthLabel);
+    let query = client
       .from('enrollments')
       .select('id')
       .eq('user_id', userId)
       .eq('program_slug', programSlug)
-      .eq('status', 'completed')
-      .limit(1)
-      .maybeSingle();
+      .eq('status', 'completed');
+    if (cohortStartDate) query = query.eq('cohort_start_date', cohortStartDate);
+    const { data } = await query.limit(1).maybeSingle();
     return !!data;
   }
+  window.OIStrideAuth.hasCompletedEnrollment = hasCompletedEnrollment;
 
   async function getIncompleteEnrollment(userId) {
     const { data } = await client
@@ -433,11 +443,19 @@
         const plan = activeTab && activeTab.dataset.priceTab === 'split' ? 'installment' : 'full';
         url.searchParams.set('plan', plan);
 
+        // Cohort dropdown (if this program has one) is already showing its
+        // real computed month at click time — read it now so both branches
+        // below can use it (the completed-enrollment check needs to know
+        // WHICH cohort, per Brief #10 — a different cohort shouldn't block).
+        const cohortSelect = document.getElementById('cohort-select');
+        const cohortLabel = cohortSelect && cohortSelect.value ? cohortSelect.value : null;
+
         const session = await getCurrentSession();
         if (session) {
-          // Brief #7 — a signed-in user who already completed this program
-          // gets a message instead of walking through checkout again.
-          const alreadyCompleted = await hasCompletedEnrollment(session.user.id, slug);
+          // Brief #7/#10 — a signed-in user who already completed THIS
+          // cohort of this program gets a message instead of walking
+          // through checkout again.
+          const alreadyCompleted = await hasCompletedEnrollment(session.user.id, slug, cohortLabel);
           if (alreadyCompleted) {
             openModal('already-enrolled');
             return;
@@ -448,13 +466,10 @@
         sessionStorage.setItem(PENDING_PROGRAM_KEY, slug);
         sessionStorage.setItem(PENDING_PLAN_KEY, plan);
         sessionStorage.setItem(FROM_ENROLL_KEY, '1');
-        // Cohort dropdown (if this program has one) is already showing its
-        // real computed month at click time, so capture it now — this is
-        // what lets a brand-new signup count toward that cohort's "spots
-        // left" before they've even finished paying.
-        const cohortSelect = document.getElementById('cohort-select');
-        if (cohortSelect && cohortSelect.value) {
-          sessionStorage.setItem(PENDING_COHORT_KEY, cohortSelect.value);
+        // What this enables the signup/signin handlers to do once the user
+        // finishes authenticating — see PENDING_COHORT_KEY usages there.
+        if (cohortLabel) {
+          sessionStorage.setItem(PENDING_COHORT_KEY, cohortLabel);
         } else {
           sessionStorage.removeItem(PENDING_COHORT_KEY);
         }

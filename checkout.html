@@ -28,7 +28,7 @@
   </div>
 </header>
 
-<section class="section" style="padding-top:0;">
+<section class="section" id="checkout-main" style="padding-top:0;">
   <div class="container two-col" style="align-items:start;">
 
     <div class="form-card reveal">
@@ -97,6 +97,20 @@
   </div>
 </section>
 
+<!-- Brief #10 — shown instead of the checkout form (not a dismissible
+     overlay) when this signed-in user already has a completed enrollment
+     for this exact program + cohort. checkout.html is reachable directly
+     (bookmark, browser back/forward, a retyped URL) without ever going
+     through the "Enroll Now" click that normally catches this, so this
+     page needs its own independent check, not just a message someone
+     could close and still find a live Pay button underneath. -->
+<section class="section text-center hidden" id="checkout-already-enrolled" style="padding-top:0;">
+  <div class="container" style="max-width:520px;">
+    <h2 style="font-size:24px;">You're already enrolled</h2>
+    <p class="lead" style="margin-left:auto; margin-right:auto; margin-top:14px;">You've already completed this program. Want to join a future cohort, or need something else? <a href="book-a-call.html">Talk to us</a></p>
+  </div>
+</section>
+
 <script>
 const PROGRAMS = {
   "project-management": { name: "Agile Project Management", cohort: true, priceValue: 250000, anchorValue: 350000 },
@@ -137,6 +151,40 @@ if (program.priceValue) {
 <script src="assets/js/supabase-config.js"></script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/main.js"></script>
+<script>
+// Brief #10 — checkout.html's own completed-enrollment guard. The
+// "Enroll Now" click on the program page already checks this
+// (assets/js/auth.js's wireEnrollLinks/handleSignIn), but checkout.html
+// is also reachable directly — a bookmark, browser back/forward, or a
+// retyped URL — entirely bypassing that click. This re-runs the same
+// check independently on load, and again if the cohort dropdown changes
+// (a completed enrollment for one cohort must not block a legitimately
+// different one). Deferred to DOMContentLoaded so main.js has already
+// populated #cohort-choice with real months.
+document.addEventListener("DOMContentLoaded", () => {
+  if (!program.cohort) return;
+  const mainSection = document.getElementById("checkout-main");
+  const blockedSection = document.getElementById("checkout-already-enrolled");
+  const cohortSelect = document.getElementById("cohort-choice");
+  if (!mainSection || !blockedSection) return;
+
+  async function refreshGuard() {
+    const { data: { session } } = await OIStrideAuth.client.auth.getSession();
+    if (!session) {
+      mainSection.classList.remove("hidden");
+      blockedSection.classList.add("hidden");
+      return;
+    }
+    const cohortValue = cohortSelect ? cohortSelect.value : null;
+    const alreadyCompleted = await OIStrideAuth.hasCompletedEnrollment(session.user.id, slug, cohortValue);
+    mainSection.classList.toggle("hidden", alreadyCompleted);
+    blockedSection.classList.toggle("hidden", !alreadyCompleted);
+  }
+
+  refreshGuard();
+  if (cohortSelect) cohortSelect.addEventListener("change", refreshGuard);
+});
+</script>
 <script>
 // Pre-select the payment plan carried over from the program page's
 // "Enroll Now" click (Brief #7 — ?plan=installment / ?plan=full).

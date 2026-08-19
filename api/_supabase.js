@@ -96,6 +96,29 @@ async function getEnrollment(userId, programSlug) {
   return rows[0] || null;
 }
 
+// Brief #10 — the true last line of defense against a duplicate charge:
+// even if every client-side guard is somehow bypassed, paystack-initialize
+// still won't start a new 'full'/'deposit' transaction for a program +
+// cohort the user has already completed. Scoped to the exact cohort (not
+// "any cohort ever completed") so a legitimately different cohort isn't
+// blocked — matches the client-side hasCompletedEnrollment in auth.js.
+async function hasCompletedEnrollmentForCohort(userId, programSlug, cohortStartDate) {
+  const key = requireServiceRoleKey();
+  let url = `${SUPABASE_URL}/rest/v1/enrollments?user_id=eq.${encodeURIComponent(userId)}&program_slug=eq.${encodeURIComponent(programSlug)}&status=eq.completed&select=id&limit=1`;
+  url += cohortStartDate
+    ? `&cohort_start_date=eq.${encodeURIComponent(cohortStartDate)}`
+    : `&cohort_start_date=is.null`;
+  const res = await fetch(url, {
+    headers: { apikey: key, Authorization: `Bearer ${key}` },
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Supabase read failed (${res.status}): ${text}`);
+  }
+  const rows = await res.json();
+  return rows.length > 0;
+}
+
 // Aggregate-only: returns a plain count of enrollments for a program +
 // cohort, never the underlying rows, so this is safe to expose via a
 // public "spots left" endpoint. 'started' (signed up, hasn't paid yet)
@@ -122,4 +145,4 @@ async function countActiveEnrollments(programSlug, cohortStartDate) {
   return total && total !== "*" ? parseInt(total, 10) : 0;
 }
 
-module.exports = { getUserFromAccessToken, upsertEnrollment, getEnrollment, countActiveEnrollments };
+module.exports = { getUserFromAccessToken, upsertEnrollment, getEnrollment, countActiveEnrollments, hasCompletedEnrollmentForCohort };
