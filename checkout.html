@@ -138,6 +138,19 @@ if (program.priceValue) {
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/main.js"></script>
 <script>
+// Pre-select the payment plan carried over from the program page's
+// "Enroll Now" click (Brief #7 — ?plan=installment / ?plan=full).
+// Deferred to DOMContentLoaded so main.js has already wired up the
+// price-toggle buttons' click handlers by the time this simulates a
+// click on one, instead of duplicating that toggle logic here.
+document.addEventListener("DOMContentLoaded", () => {
+  const plan = params.get("plan");
+  if (plan !== "installment") return;
+  const splitTab = document.querySelector('.price-toggle button[data-price-tab="split"]');
+  if (splitTab) splitTab.click();
+});
+</script>
+<script>
 // Real "Spots left" (Brief #6). Deferred to DOMContentLoaded — main.js's
 // cohort-population code (also DOMContentLoaded-deferred, but registered
 // first since its <script> tag comes first) needs to have already replaced

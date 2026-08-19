@@ -79,3 +79,24 @@ alter table public.enrollments
 create index if not exists enrollments_balance_due_idx
   on public.enrollments (balance_due_date)
   where installment_status = 'pending';
+
+-- ---------------------------------------------------------------------
+-- Fix enrollments uniqueness (Claude Code Brief #7)
+-- unique(user_id, program_slug) meant only one enrollment could ever
+-- exist per person per program, full stop — a genuine second enrollment
+-- for a different cohort (e.g. they completed one cohort and later join
+-- another) would silently overwrite the first one's payment history via
+-- upsert instead of creating a new row. Widening the key to include
+-- cohort_start_date so distinct cohorts get distinct rows.
+--
+-- Note: Postgres treats NULL as distinct from any other NULL in a plain
+-- unique constraint, so rows where cohort_start_date is unknown (not
+-- expected in normal use post-Brief-#6, but possible for pre-existing
+-- rows or the rare direct-checkout-link edge case) aren't deduplicated
+-- against each other the way the old constraint guaranteed. Accepted as
+-- a small residual gap rather than a functional/expression index, since
+-- Supabase's upsert (on_conflict=<column list>) can only target a plain
+-- column-list constraint, not an expression one.
+alter table public.enrollments drop constraint if exists enrollments_user_id_program_slug_key;
+alter table public.enrollments add constraint enrollments_user_id_program_slug_cohort_start_date_key
+  unique (user_id, program_slug, cohort_start_date);

@@ -45,12 +45,18 @@ async function getUserFromAccessToken(accessToken) {
 }
 
 // Upsert (insert-or-update) an enrollments row, keyed on the table's
-// existing unique(user_id, program_slug) constraint. Used instead of a
-// plain UPDATE so this is safe even if the row wasn't created earlier in
-// the sign-up flow for some reason.
+// unique(user_id, program_slug, cohort_start_date) constraint (Brief #7 —
+// widened from just (user_id, program_slug) so a second enrollment for a
+// different cohort creates a new row instead of overwriting the first
+// one's payment history). Used instead of a plain UPDATE so this is safe
+// even if the row wasn't created earlier in the sign-up flow for some
+// reason. Every caller must include cohort_start_date in `fields` (even
+// as null) for the conflict target to actually match the intended row —
+// omitting it entirely defaults to null on the attempted insert, which
+// silently misses a row that already has a real cohort date.
 async function upsertEnrollment(fields) {
   const key = requireServiceRoleKey();
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/enrollments?on_conflict=user_id,program_slug`, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/enrollments?on_conflict=user_id,program_slug,cohort_start_date`, {
     method: "POST",
     headers: {
       apikey: key,
@@ -68,9 +74,17 @@ async function upsertEnrollment(fields) {
   return rows[0] || null;
 }
 
+// A user can now have more than one enrollment row per program (Brief #7
+// — one per cohort), so this is no longer guaranteed to return a single
+// row. Ordered most-recent-first and capped at 1 so behavior stays
+// deterministic (the most recent enrollment wins) rather than depending
+// on whatever order Postgres happens to return. There's no cohort-aware
+// "pay the balance for cohort X specifically" API yet (that's the My
+// Account "Pay Now" flow, not built), so this is a reasonable stand-in
+// until that exists — most people will only ever have one open balance.
 async function getEnrollment(userId, programSlug) {
   const key = requireServiceRoleKey();
-  const url = `${SUPABASE_URL}/rest/v1/enrollments?user_id=eq.${encodeURIComponent(userId)}&program_slug=eq.${encodeURIComponent(programSlug)}&select=*`;
+  const url = `${SUPABASE_URL}/rest/v1/enrollments?user_id=eq.${encodeURIComponent(userId)}&program_slug=eq.${encodeURIComponent(programSlug)}&select=*&order=created_at.desc&limit=1`;
   const res = await fetch(url, {
     headers: { apikey: key, Authorization: `Bearer ${key}` },
   });

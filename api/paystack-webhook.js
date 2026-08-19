@@ -138,6 +138,11 @@ module.exports = async (req, res) => {
       fields = {
         user_id: userId,
         program_slug: programSlug,
+        // Must match the row getEnrollment found, or the new
+        // (user_id, program_slug, cohort_start_date) conflict target
+        // (Brief #7) won't find it and this would insert a stray
+        // duplicate row instead of updating the existing enrollment.
+        cohort_start_date: existing ? existing.cohort_start_date : null,
         remaining_balance_kobo: 0,
         installment_status: "paid",
         amount_paid_kobo: (existing ? existing.amount_paid_kobo || 0 : 0) + amountKobo,

@@ -12,6 +12,7 @@
   const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   const PENDING_PROGRAM_KEY = 'oistride_pending_program';
   const PENDING_COHORT_KEY = 'oistride_pending_cohort';
+  const PENDING_PLAN_KEY = 'oistride_pending_plan';
   const FROM_ENROLL_KEY = 'oistride_pending_from_enroll';
 
   // Mirrors api/_dates.js's parseCohortMonth — kept as a small duplicate
@@ -133,6 +134,11 @@
         <div class="auth-screen" data-screen="transition">
           <div class="auth-transition-msg">Account created. Let's finish enrolling.</div>
         </div>
+
+        <div class="auth-screen" data-screen="already-enrolled">
+          <h2>You're already enrolled</h2>
+          <p class="auth-sub">You've already completed this program. Want to join a future cohort, or need something else? <a href="book-a-call.html">Talk to us</a></p>
+        </div>
       </div>
     `;
     document.body.appendChild(overlay);
@@ -223,7 +229,8 @@
 
     if (pendingProgram) {
       showScreen('transition');
-      setTimeout(() => { window.location.href = 'checkout.html?program=' + encodeURIComponent(pendingProgram); }, 900);
+      const plan = sessionStorage.getItem(PENDING_PLAN_KEY) || 'full';
+      setTimeout(() => { window.location.href = 'checkout.html?program=' + encodeURIComponent(pendingProgram) + '&plan=' + encodeURIComponent(plan); }, 900);
     } else {
       closeModal();
       window.location.href = 'index.html';
@@ -254,8 +261,16 @@
     const fromEnroll = sessionStorage.getItem(FROM_ENROLL_KEY) === '1';
 
     if (fromEnroll && pendingProgram) {
+      // Same completed-program guard as wireEnrollLinks — this is the other
+      // way someone reaches checkout via the Enroll gate (they weren't
+      // signed in yet at click time, so the guard couldn't run until now).
+      if (await hasCompletedEnrollment(data.user.id, pendingProgram)) {
+        showScreen('already-enrolled');
+        return;
+      }
       closeModal();
-      window.location.href = 'checkout.html?program=' + encodeURIComponent(pendingProgram);
+      const plan = sessionStorage.getItem(PENDING_PLAN_KEY) || 'full';
+      window.location.href = 'checkout.html?program=' + encodeURIComponent(pendingProgram) + '&plan=' + encodeURIComponent(plan);
       return;
     }
 
@@ -312,8 +327,24 @@
     if (cohortStartDate) row.cohort_start_date = cohortStartDate;
     await client.from('enrollments').upsert(
       row,
-      { onConflict: 'user_id,program_slug', ignoreDuplicates: false }
+      { onConflict: 'user_id,program_slug,cohort_start_date', ignoreDuplicates: false }
     );
+  }
+
+  // Brief #7 — a signed-in user who already finished a program shouldn't
+  // be walked through checkout for it again. Any cohort counts (a user
+  // can now have more than one row per program, one per cohort), so this
+  // just checks whether ANY of them are 'completed'.
+  async function hasCompletedEnrollment(userId, programSlug) {
+    const { data } = await client
+      .from('enrollments')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('program_slug', programSlug)
+      .eq('status', 'completed')
+      .limit(1)
+      .maybeSingle();
+    return !!data;
   }
 
   async function getIncompleteEnrollment(userId) {
@@ -372,6 +403,7 @@
         e.preventDefault();
         sessionStorage.removeItem(PENDING_PROGRAM_KEY);
         sessionStorage.removeItem(PENDING_COHORT_KEY);
+        sessionStorage.removeItem(PENDING_PLAN_KEY);
         sessionStorage.removeItem(FROM_ENROLL_KEY);
         openModal('signin');
       });
@@ -393,12 +425,28 @@
         e.preventDefault();
         const url = new URL(el.getAttribute('href'), window.location.href);
         const slug = url.searchParams.get('program');
+
+        // Brief #7 — carry whichever payment plan tab is active on this
+        // page's pricing card through to checkout, so it doesn't reset to
+        // "Pay in Full" there. Defaults to 'full' on pages with no toggle.
+        const activeTab = document.querySelector('.price-toggle button.active');
+        const plan = activeTab && activeTab.dataset.priceTab === 'split' ? 'installment' : 'full';
+        url.searchParams.set('plan', plan);
+
         const session = await getCurrentSession();
         if (session) {
-          window.location.href = el.getAttribute('href');
+          // Brief #7 — a signed-in user who already completed this program
+          // gets a message instead of walking through checkout again.
+          const alreadyCompleted = await hasCompletedEnrollment(session.user.id, slug);
+          if (alreadyCompleted) {
+            openModal('already-enrolled');
+            return;
+          }
+          window.location.href = url.toString();
           return;
         }
         sessionStorage.setItem(PENDING_PROGRAM_KEY, slug);
+        sessionStorage.setItem(PENDING_PLAN_KEY, plan);
         sessionStorage.setItem(FROM_ENROLL_KEY, '1');
         // Cohort dropdown (if this program has one) is already showing its
         // real computed month at click time, so capture it now — this is
