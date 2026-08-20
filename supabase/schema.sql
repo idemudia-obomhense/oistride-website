@@ -100,3 +100,30 @@ create index if not exists enrollments_balance_due_idx
 alter table public.enrollments drop constraint if exists enrollments_user_id_program_slug_key;
 alter table public.enrollments add constraint enrollments_user_id_program_slug_cohort_start_date_key
   unique (user_id, program_slug, cohort_start_date);
+
+-- ---------------------------------------------------------------------
+-- Newsletter signups (Claude Code Brief #11)
+-- No RLS policies on purpose — this is only ever written to via
+-- api/newsletter-subscribe.js using the Supabase service role key
+-- (bypasses RLS), never directly from the browser, so there's no need
+-- for a public insert policy. RLS stays enabled as a default-deny
+-- backstop in case that ever changes.
+-- ---------------------------------------------------------------------
+create table if not exists public.newsletter_subscribers (
+  id uuid primary key default gen_random_uuid(),
+  email text not null unique,
+  created_at timestamptz not null default now()
+);
+
+alter table public.newsletter_subscribers enable row level security;
+
+-- ---------------------------------------------------------------------
+-- Installment reminder tracking (Claude Code Brief #11, item 4)
+-- One timestamp per reminder stage, set once sent so the daily cron job
+-- (api/send-installment-reminders.js) never double-sends if it's ever
+-- retried or manually re-run on the same day.
+-- ---------------------------------------------------------------------
+alter table public.enrollments
+  add column if not exists reminder_3day_sent_at timestamptz,
+  add column if not exists reminder_dueday_sent_at timestamptz,
+  add column if not exists reminder_escalated_at timestamptz;

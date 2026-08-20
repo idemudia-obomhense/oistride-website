@@ -23,6 +23,7 @@ const { getProgramPricing } = require("./_pricing");
 const { verifyTransaction } = require("./_paystack");
 const { upsertEnrollment, getEnrollment } = require("./_supabase");
 const { secondMonthStartDate } = require("./_dates");
+const { sendPaymentConfirmationEmail } = require("./_notifications");
 
 module.exports.config = { api: { bodyParser: false } };
 
@@ -154,6 +155,21 @@ module.exports = async (req, res) => {
     }
 
     await upsertEnrollment(fields);
+
+    // Awaited (not fire-and-forget) — Vercel can freeze/suspend the
+    // function as soon as res.end() is called, which would silently kill
+    // an in-flight unawaited email send. sendPaymentConfirmationEmail
+    // catches its own errors internally, so this never fails the webhook
+    // or triggers a Paystack retry if Resend has a bad moment.
+    await sendPaymentConfirmationEmail({
+      email: verified.customer && verified.customer.email,
+      programName: pricing ? pricing.name : programSlug,
+      chargeType,
+      amountKobo,
+      remainingBalanceKobo: fields.remaining_balance_kobo,
+      balanceDueDate: fields.balance_due_date,
+    });
+
     res.status(200).end();
   } catch (err) {
     // Non-200 makes Paystack retry the webhook later, which is what we

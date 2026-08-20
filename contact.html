@@ -38,12 +38,12 @@
       </div>
     </div>
     <div class="form-card reveal">
-      <form data-demo-form="thank-you.html?type=call">
+      <form id="contact-form">
         <div class="honeypot"><input type="text" name="company" tabindex="-1" autocomplete="off"></div>
-        <div class="form-row"><label>Full name</label><input type="text" required></div>
-        <div class="form-row"><label>Email</label><input type="email" required></div>
+        <div class="form-row"><label>Full name</label><input type="text" name="fullName" required></div>
+        <div class="form-row"><label>Email</label><input type="email" name="email" required></div>
         <div class="form-row"><label>What's this about?</label>
-          <select>
+          <select name="topic">
             <option>General question</option>
             <option>Agile Project Management cohort</option>
             <option>Product Management</option>
@@ -53,11 +53,12 @@
           </select>
         </div>
         <div class="form-grid-2">
-          <div class="form-row"><label>Phone</label><input type="tel"></div>
-          <div class="form-row"><label>Alternative phone</label><input type="tel"></div>
+          <div class="form-row"><label>Phone</label><input type="tel" name="phone"></div>
+          <div class="form-row"><label>Alternative phone</label><input type="tel" name="altPhone"></div>
         </div>
-        <div class="form-row"><label>Message</label><textarea rows="4" required></textarea></div>
-        <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+        <div class="form-row"><label>Message</label><textarea rows="4" name="message" required></textarea></div>
+        <div class="auth-error" id="contact-error" hidden></div>
+        <button type="submit" class="btn btn-primary btn-block" id="contact-submit">Send Message</button>
       </form>
     </div>
   </div>
@@ -97,5 +98,56 @@
 <script src="assets/js/supabase-config.js"></script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/main.js"></script>
+<script>
+// Brief #11 — actually emails oistride12@gmail.com instead of the old
+// demo-form redirect that sent nothing anywhere.
+(function () {
+  const form = document.getElementById("contact-form");
+  const submitBtn = document.getElementById("contact-submit");
+  const errorEl = document.getElementById("contact-error");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorEl.hidden = true;
+
+    const honey = form.querySelector(".honeypot input");
+    if (honey && honey.value) return; // silently drop bot submissions
+
+    const original = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Sending…";
+
+    try {
+      const res = await fetch("/api/send-notification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: "contact",
+          fullName: form.fullName.value,
+          email: form.email.value,
+          phone: form.phone.value,
+          altPhone: form.altPhone.value,
+          topic: form.topic.value,
+          message: form.message.value,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        errorEl.textContent = data.error || "Couldn't send your message. Please try again.";
+        errorEl.hidden = false;
+        return;
+      }
+      window.location.href = "thank-you.html?type=call";
+    } catch (err) {
+      console.error(err);
+      errorEl.textContent = "Couldn't send your message. Please check your connection and try again.";
+      errorEl.hidden = false;
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = original;
+    }
+  });
+})();
+</script>
 </body>
 </html>

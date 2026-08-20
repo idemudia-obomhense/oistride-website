@@ -145,4 +145,90 @@ async function countActiveEnrollments(programSlug, cohortStartDate) {
   return total && total !== "*" ? parseInt(total, 10) : 0;
 }
 
-module.exports = { getUserFromAccessToken, upsertEnrollment, getEnrollment, countActiveEnrollments, hasCompletedEnrollmentForCohort };
+// Brief #11 — the installment-reminder cron job runs with no logged-in
+// user (there's no browser session for a scheduled job), so it needs the
+// Admin API + service role key to look up an enrollee's email by id,
+// rather than the /auth/v1/user pattern above which needs their own
+// access token.
+async function getUserEmailById(userId) {
+  const key = requireServiceRoleKey();
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${encodeURIComponent(userId)}`, {
+    headers: { apikey: key, Authorization: `Bearer ${key}` },
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data && data.email ? data.email : null;
+}
+
+// All enrollments with an outstanding installment balance that haven't
+// had every applicable reminder sent yet — the cron job buckets these by
+// balance_due_date vs. today itself (3-day-before / due-day / overdue
+// escalation) rather than this doing three separate date-filtered
+// queries, since "today" needs to be computed consistently once either way.
+async function getEnrollmentsNeedingReminders() {
+  const key = requireServiceRoleKey();
+  const url = `${SUPABASE_URL}/rest/v1/enrollments?installment_status=in.(pending,overdue)&balance_due_date=not.is.null&select=id,user_id,program_slug,remaining_balance_kobo,balance_due_date,installment_status,reminder_3day_sent_at,reminder_dueday_sent_at,reminder_escalated_at`;
+  const res = await fetch(url, {
+    headers: { apikey: key, Authorization: `Bearer ${key}` },
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Supabase read failed (${res.status}): ${text}`);
+  }
+  return res.json();
+}
+
+// Updates a specific enrollment row by its own id — simpler than the
+// on_conflict upsert pattern above when the caller already has the exact
+// row (as the reminder cron does), and avoids needing cohort_start_date
+// in the payload just to satisfy that conflict target.
+async function updateEnrollmentById(id, fields) {
+  const key = requireServiceRoleKey();
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/enrollments?id=eq.${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal",
+    },
+    body: JSON.stringify(fields),
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Supabase update failed (${res.status}): ${text}`);
+  }
+}
+
+// Brief #11 item 5 — newsletter signups. on_conflict + ignore-duplicates
+// so re-subscribing with an email already on the list is a silent no-op
+// (unique(email) constraint) rather than a 409 the caller has to handle.
+async function insertNewsletterSubscriber(email) {
+  const key = requireServiceRoleKey();
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/newsletter_subscribers?on_conflict=email`, {
+    method: "POST",
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+      Prefer: "resolution=ignore-duplicates",
+    },
+    body: JSON.stringify({ email }),
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Supabase insert failed (${res.status}): ${text}`);
+  }
+}
+
+module.exports = {
+  getUserFromAccessToken,
+  upsertEnrollment,
+  getEnrollment,
+  countActiveEnrollments,
+  hasCompletedEnrollmentForCohort,
+  getUserEmailById,
+  getEnrollmentsNeedingReminders,
+  updateEnrollmentById,
+  insertNewsletterSubscriber,
+};

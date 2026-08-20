@@ -117,17 +117,6 @@ document.addEventListener('DOMContentLoaded', () => {
     show(0);
   }
 
-  // Simple checkout / brochure / consultation forms (front-end demo only)
-  document.querySelectorAll('[data-demo-form]').forEach(f => {
-    f.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const honey = f.querySelector('.honeypot input');
-      if (honey && honey.value) return;
-      const dest = f.getAttribute('data-demo-form') || 'thank-you.html';
-      window.location.href = dest;
-    });
-  });
-
   // Hero cursor glow + visual tilt (homepage only — heroEl/glow only exist there)
   const heroEl = document.getElementById('heroEl');
   const glow = document.getElementById('glow');
@@ -168,14 +157,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Newsletter forms
+  // Newsletter forms — actually stores the email now (Brief #11 item 5),
+  // not just a fake "Subscribed ✓" with nothing captured.
   document.querySelectorAll('.newsletter-form').forEach(f => {
-    f.addEventListener('submit', (e) => {
+    f.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = f.querySelector('button');
+      const input = f.querySelector('input[name="email"]');
       const original = btn.textContent;
-      btn.textContent = 'Subscribed ✓';
-      setTimeout(() => { btn.textContent = original; f.reset(); }, 2400);
+      btn.disabled = true;
+      btn.textContent = 'Subscribing…';
+      try {
+        const res = await fetch('/api/newsletter-subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: input.value }),
+        });
+        if (!res.ok) throw new Error('subscribe failed');
+        btn.textContent = 'Subscribed ✓';
+        setTimeout(() => { btn.disabled = false; btn.textContent = original; f.reset(); }, 2400);
+      } catch (err) {
+        console.error(err);
+        btn.disabled = false;
+        btn.textContent = "Couldn't subscribe — try again";
+        setTimeout(() => { btn.textContent = original; }, 2400);
+      }
     });
   });
 

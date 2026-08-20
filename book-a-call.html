@@ -38,14 +38,15 @@
 
     <div class="form-card reveal" style="margin-top:24px;">
       <h3 style="font-size:17px; margin-bottom:20px;">Or send a quick request</h3>
-      <form data-demo-form="thank-you.html?type=call">
+      <form id="call-form">
         <div class="honeypot"><input type="text" name="company" tabindex="-1" autocomplete="off"></div>
         <div class="form-grid-2">
-          <div class="form-row"><label>Full name</label><input type="text" required></div>
-          <div class="form-row"><label>Email</label><input type="email" required></div>
+          <div class="form-row"><label>Full name</label><input type="text" name="fullName" required></div>
+          <div class="form-row"><label>Email</label><input type="email" name="email" required></div>
         </div>
-        <div class="form-row"><label>What would you like to talk about?</label><textarea rows="3" placeholder="e.g. Which program fits my situation"></textarea></div>
-        <button type="submit" class="btn btn-primary btn-block">Request a Call</button>
+        <div class="form-row"><label>What would you like to talk about?</label><textarea rows="3" name="message" placeholder="e.g. Which program fits my situation"></textarea></div>
+        <div class="auth-error" id="call-error" hidden></div>
+        <button type="submit" class="btn btn-primary btn-block" id="call-submit">Request a Call</button>
       </form>
     </div>
   </div>
@@ -55,5 +56,53 @@
 <script src="assets/js/supabase-config.js"></script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/main.js"></script>
+<script>
+// Brief #11 — actually emails oistride12@gmail.com instead of the old
+// demo-form redirect that sent nothing anywhere.
+(function () {
+  const form = document.getElementById("call-form");
+  const submitBtn = document.getElementById("call-submit");
+  const errorEl = document.getElementById("call-error");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorEl.hidden = true;
+
+    const honey = form.querySelector(".honeypot input");
+    if (honey && honey.value) return; // silently drop bot submissions
+
+    const original = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Sending…";
+
+    try {
+      const res = await fetch("/api/send-notification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: "call",
+          fullName: form.fullName.value,
+          email: form.email.value,
+          message: form.message.value,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        errorEl.textContent = data.error || "Couldn't send your request. Please try again.";
+        errorEl.hidden = false;
+        return;
+      }
+      window.location.href = "thank-you.html?type=call";
+    } catch (err) {
+      console.error(err);
+      errorEl.textContent = "Couldn't send your request. Please check your connection and try again.";
+      errorEl.hidden = false;
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = original;
+    }
+  });
+})();
+</script>
 </body>
 </html>
