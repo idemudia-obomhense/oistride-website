@@ -36,10 +36,9 @@
       <form id="checkout-form">
         <div class="honeypot"><input type="text" name="company" tabindex="-1" autocomplete="off"></div>
         <div class="form-grid-2">
-          <div class="form-row"><label>Full name</label><input type="text" name="fullName" required></div>
           <div class="form-row"><label>Email</label><input type="email" name="email" required></div>
+          <div class="form-row"><label>Phone / WhatsApp</label><input type="tel" name="phone" required></div>
         </div>
-        <div class="form-row"><label>Phone / WhatsApp</label><input type="tel" name="phone" required></div>
 
         <div id="cohort-field" class="form-row hidden">
           <label>Choose your cohort</label>
@@ -151,6 +150,19 @@ if (program.priceValue) {
 <script src="assets/js/supabase-config.js"></script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/main.js"></script>
+<script>
+// Brief #15 — prefill the email field from the actual signed-in session,
+// not left blank/whatever a browser autofills. Purely a display/contact
+// convenience: identity was already never derived from this field (the
+// submit handler below never even sends it), only from the verified
+// session's access token server-side in api/paystack-initialize.js.
+document.addEventListener("DOMContentLoaded", async () => {
+  const { data: { session } } = await OIStrideAuth.client.auth.getSession();
+  if (!session) return;
+  const emailField = document.querySelector('#checkout-form input[name="email"]');
+  if (emailField && !emailField.value) emailField.value = session.user.email;
+});
+</script>
 <script>
 // Brief #10 — checkout.html's own completed-enrollment guard. The
 // "Enroll Now" click on the program page already checks this
@@ -271,6 +283,17 @@ document.addEventListener("DOMContentLoaded", () => {
         showError("Your session expired — please sign in again and retry.");
         return;
       }
+
+      // Best-effort phone capture (Brief #15 follow-up) — checkout is the
+      // most reliable place to catch this (required here, only optional
+      // at signup), since the confirmation email and thank-you.html both
+      // promise a WhatsApp community invite that depends on having a
+      // number on file. Always overwrites — checkout's value is the more
+      // recent/relevant one, no "only if empty" check. Not awaited: a
+      // failed save here must never block payment.
+      OIStrideAuth.client.auth.updateUser({ data: { phone: form.phone.value.trim() } }).catch((err) => {
+        console.error("Best-effort phone save failed (not blocking payment):", err);
+      });
 
       const activeTab = document.querySelector(".price-toggle button.active");
       const chargeType = activeTab && activeTab.dataset.priceTab === "split" ? "deposit" : "full";
