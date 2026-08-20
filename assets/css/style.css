@@ -194,11 +194,12 @@ section { position: relative; }
   transform: rotate(45deg);
 }
 .user-menu.open .user-menu-panel { opacity: 1; visibility: visible; transform: translateY(0); }
-.user-menu-panel button {
-  width: 100%; text-align: left; background: none; border: none; cursor: pointer;
+.user-menu-panel button, .user-menu-panel a {
+  display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer;
   padding: 10px 12px; border-radius: 8px; font-family: var(--font-body); font-size: 13.5px; color: var(--navy);
+  text-decoration: none; box-sizing: border-box;
 }
-.user-menu-panel button:hover { background: var(--bg-soft); }
+.user-menu-panel button:hover, .user-menu-panel a:hover { background: var(--bg-soft); }
 .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 6px; }
 .nav-toggle span { display: block; width: 22px; height: 2px; background: var(--navy); margin: 5px 0; border-radius: 2px; }
 

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account — OIStride Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container">
+    <a href="index.html" class="nav-logo"><img src="assets/img/logo.png" alt="OIStride"></a>
+    <div class="nav-cta" style="margin-left:auto;">
+      <div data-auth-slot></div>
+      <a href="index.html" class="btn btn-outline btn-sm" data-back-btn>← Back</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-hero" style="padding-bottom:40px;">
+  <div class="container text-center">
+    <span class="eyebrow" style="justify-content:center;">My Account</span>
+    <h1 id="acct-heading">Welcome back</h1>
+    <p class="lead" style="margin-left:auto; margin-right:auto;">Your enrollments, payments, and profile, all in one place.</p>
+  </div>
+</header>
+
+<section class="section" style="padding-top:0;">
+  <div class="container" style="max-width:820px;">
+
+    <div class="reveal" style="margin-bottom:40px;">
+      <h2 style="font-size:20px; margin-bottom:18px;">Your Programs</h2>
+      <div id="acct-programs-empty" class="form-card hidden" style="text-align:center; color:var(--grey);">
+        You haven't enrolled in a program yet. <a href="programs-catalog.html">Browse programs</a>.
+      </div>
+      <div id="acct-programs-list" style="display:flex; flex-direction:column; gap:16px;"></div>
+    </div>
+
+    <div class="form-card reveal" style="margin-bottom:24px;">
+      <h3 style="font-size:17px; margin-bottom:20px;">Profile</h3>
+      <form id="profile-form">
+        <div class="form-grid-2">
+          <div class="form-row"><label>First name</label><input type="text" name="firstName" required></div>
+          <div class="form-row"><label>Last name</label><input type="text" name="lastName" required></div>
+        </div>
+        <div class="form-row"><label>Email</label><input type="email" name="email" required></div>
+        <div class="form-row"><label>Phone</label><input type="tel" name="phone"></div>
+        <div class="auth-error" id="profile-error" hidden></div>
+        <div class="auth-success" id="profile-success" hidden></div>
+        <button type="submit" class="btn btn-primary" id="profile-submit">Save Changes</button>
+      </form>
+    </div>
+
+    <div class="form-card reveal">
+      <h3 style="font-size:17px; margin-bottom:20px;">Change Password</h3>
+      <form id="password-form">
+        <div class="form-row"><label>New password</label>
+          <div class="password-field">
+            <input type="password" name="newPassword" autocomplete="new-password" minlength="6" required>
+            <button type="button" class="password-toggle" data-password-toggle aria-label="Show password">
+              <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icon-eye-off hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.6 21.6 0 0 1 5.06-6.06M9.9 4.24A10.4 10.4 0 0 1 12 4c7 0 11 8 11 8a21.6 21.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="auth-error" id="password-error" hidden></div>
+        <div class="auth-success" id="password-success" hidden></div>
+        <button type="submit" class="btn btn-primary" id="password-submit">Update Password</button>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase-config.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+// Brief #14 — My Account. Mirrors the small per-page PROGRAMS-object
+// convention already used on checkout.html/program pages rather than a
+// shared module (this site has no build step / ES modules).
+const PROGRAM_META = {
+  "project-management": { name: "Agile Project Management", durationWeeks: 8 },
+  "product-management": { name: "Product Management", durationWeeks: 12 },
+  "ai-product-management": { name: "AI Product Management", durationWeeks: 12 },
+};
+
+// Real per-cohort WhatsApp invite links go here once Jed has them — until
+// then the Materials section shows a "reach out" fallback instead of a
+// broken or fabricated link.
+const WHATSAPP_LINKS = {
+  // "project-management": "https://chat.whatsapp.com/XXXXXXXXXXXXXXXXXXXXXX",
+  // "product-management": "https://chat.whatsapp.com/XXXXXXXXXXXXXXXXXXXXXX",
+  // "ai-product-management": "https://chat.whatsapp.com/XXXXXXXXXXXXXXXXXXXXXX",
+};
+
+function nairaFmt(kobo) { return "₦" + Math.round(kobo / 100).toLocaleString("en-US"); }
+function dateFmt(dateStr) {
+  if (!dateStr) return "";
+  return new Date(dateStr + "T00:00:00Z").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
+}
+
+// active / upcoming / concluded — computed from cohort_start_date +
+// program duration compared to today at render time (Brief #14: "no
+// background job needed"), not a stored/stale label.
+function computeStatus(cohortStartDate, durationWeeks) {
+  if (!cohortStartDate) return "active";
+  const start = new Date(cohortStartDate + "T00:00:00Z");
+  const end = new Date(start);
+  end.setUTCDate(end.getUTCDate() + durationWeeks * 7);
+  const now = new Date();
+  const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  if (todayUTC < start) return "upcoming";
+  if (todayUTC > end) return "concluded";
+  return "active";
+}
+
+const STATUS_LABELS = { active: "Active", upcoming: "Upcoming", concluded: "Concluded" };
+const STATUS_COLORS = {
+  active: "background:var(--accent-ai-pale); color:var(--accent-ai-dark);",
+  upcoming: "background:var(--accent-career-pale); color:var(--accent-career-dark);",
+  concluded: "background:var(--bg-soft); color:var(--grey);",
+};
+
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str == null ? "" : String(str);
+  return div.innerHTML;
+}
+
+function renderProgramCard(row) {
+  const meta = PROGRAM_META[row.program_slug] || { name: row.program_slug, durationWeeks: 12 };
+  const status = computeStatus(row.cohort_start_date, meta.durationWeeks);
+  const isInstallment = row.payment_plan === "installment";
+  const hasBalance = isInstallment && row.remaining_balance_kobo > 0;
+  const paidCount = isInstallment ? (row.installment_status === "paid" ? 2 : 1) : null;
+  const whatsappLink = WHATSAPP_LINKS[row.program_slug];
+
+  const balanceBlock = hasBalance ? `
+    <div class="slots-row" style="margin-top:16px;"><span>Paid ${paidCount} of 2</span><span>${nairaFmt(row.remaining_balance_kobo)} remaining</span></div>
+    <p style="font-size:13px; color:var(--grey); margin-top:4px;">${row.installment_status === "overdue" ? "Overdue — was due" : "Due"} ${dateFmt(row.balance_due_date)}</p>
+    <button type="button" class="btn btn-primary btn-sm pay-now-btn" data-program-slug="${escapeHtml(row.program_slug)}" style="margin-top:10px;">Pay Now</button>
+  ` : "";
+
+  const materialsBlock = whatsappLink
+    ? `<a href="${escapeHtml(whatsappLink)}" target="_blank" rel="noopener">Join your cohort WhatsApp group →</a>`
+    : `<span style="color:var(--grey);">Group invite coming soon — <a href="book-a-call.html">reach out</a> if you need it sooner.</span>`;
+
+  return `
+    <div class="form-card">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
+        <div>
+          <h3 style="font-size:17px; margin-bottom:8px;">${escapeHtml(meta.name)}</h3>
+          <span class="badge-soft" style="${STATUS_COLORS[status]}">${STATUS_LABELS[status]}</span>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-weight:700; font-family:var(--font-display);">${nairaFmt(row.amount_paid_kobo || 0)} paid</div>
+          <div style="font-size:13px; color:var(--grey);">${isInstallment ? "70/30 Installment" : "Paid in Full"}</div>
+        </div>
+      </div>
+      ${balanceBlock}
+      <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--border); font-size:13.5px;">
+        <strong style="display:block; margin-bottom:4px;">Materials</strong>
+        ${materialsBlock}
+      </div>
+    </div>`;
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const { data: { session } } = await OIStrideAuth.client.auth.getSession();
+  if (!session) return; // guardMyAccount() in auth.js handles the sign-in prompt
+
+  const user = session.user;
+  const meta = user.user_metadata || {};
+  document.getElementById("acct-heading").textContent = `Welcome back, ${meta.first_name || (user.email || "").split("@")[0]}`;
+
+  // --- Profile form, pre-filled ---
+  const profileForm = document.getElementById("profile-form");
+  profileForm.firstName.value = meta.first_name || "";
+  profileForm.lastName.value = meta.last_name || "";
+  profileForm.email.value = user.email || "";
+  profileForm.phone.value = meta.phone || "";
+
+  profileForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const errorEl = document.getElementById("profile-error");
+    const successEl = document.getElementById("profile-success");
+    errorEl.hidden = true; successEl.hidden = true;
+    const btn = document.getElementById("profile-submit");
+    const original = btn.textContent;
+    btn.disabled = true; btn.textContent = "Saving…";
+
+    const updates = {
+      data: { first_name: profileForm.firstName.value.trim(), last_name: profileForm.lastName.value.trim(), phone: profileForm.phone.value.trim() || null },
+    };
+    if (profileForm.email.value.trim() !== user.email) {
+      updates.email = profileForm.email.value.trim();
+    }
+
+    const { error } = await OIStrideAuth.client.auth.updateUser(updates);
+    btn.disabled = false; btn.textContent = original;
+
+    if (error) {
+      errorEl.textContent = error.message;
+      errorEl.hidden = false;
+      return;
+    }
+    successEl.textContent = updates.email
+      ? "Saved. Check your new email address for a confirmation link to finish the change."
+      : "Saved.";
+    successEl.hidden = false;
+  });
+
+  // --- Password form ---
+  const passwordForm = document.getElementById("password-form");
+  passwordForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const errorEl = document.getElementById("password-error");
+    const successEl = document.getElementById("password-success");
+    errorEl.hidden = true; successEl.hidden = true;
+    const btn = document.getElementById("password-submit");
+    const original = btn.textContent;
+    btn.disabled = true; btn.textContent = "Updating…";
+
+    const { error } = await OIStrideAuth.client.auth.updateUser({ password: passwordForm.newPassword.value });
+    btn.disabled = false; btn.textContent = original;
+
+    if (error) {
+      errorEl.textContent = error.message;
+      errorEl.hidden = false;
+      return;
+    }
+    successEl.textContent = "Password updated.";
+    successEl.hidden = false;
+    passwordForm.reset();
+  });
+
+  // --- Enrolled programs ---
+  const listEl = document.getElementById("acct-programs-list");
+  const emptyEl = document.getElementById("acct-programs-empty");
+
+  const { data: enrollments, error: enrollError } = await OIStrideAuth.client
+    .from("enrollments")
+    .select("*")
+    .eq("user_id", user.id)
+    .eq("status", "completed")
+    .order("created_at", { ascending: false });
+
+  if (enrollError) {
+    console.error(enrollError);
+  }
+
+  if (!enrollments || enrollments.length === 0) {
+    emptyEl.classList.remove("hidden");
+  } else {
+    listEl.innerHTML = enrollments.map(renderProgramCard).join("");
+    listEl.querySelectorAll(".pay-now-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const programSlug = btn.dataset.programSlug;
+        const original = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = "Starting payment…";
+        try {
+          const { data: { session: freshSession } } = await OIStrideAuth.client.auth.getSession();
+          const res = await fetch("/api/paystack-initialize", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ programSlug, chargeType: "balance", accessToken: freshSession.access_token }),
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            alert(data.error || "Couldn't start payment. Please try again.");
+            btn.disabled = false;
+            btn.textContent = original;
+            return;
+          }
+          window.location.href = data.authorization_url;
+        } catch (err) {
+          console.error(err);
+          alert("Couldn't start payment. Please check your connection and try again.");
+          btn.disabled = false;
+          btn.textContent = original;
+        }
+      });
+    });
+  }
+});
+</script>
+</body>
+</html>

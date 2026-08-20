@@ -231,6 +231,9 @@
       showScreen('transition');
       const plan = sessionStorage.getItem(PENDING_PLAN_KEY) || 'full';
       setTimeout(() => { window.location.href = 'checkout.html?program=' + encodeURIComponent(pendingProgram) + '&plan=' + encodeURIComponent(plan); }, 900);
+    } else if (/my-account\.html$/.test(window.location.pathname)) {
+      closeModal();
+      window.location.reload();
     } else {
       closeModal();
       window.location.href = 'index.html';
@@ -272,6 +275,14 @@
       closeModal();
       const plan = sessionStorage.getItem(PENDING_PLAN_KEY) || 'full';
       window.location.href = 'checkout.html?program=' + encodeURIComponent(pendingProgram) + '&plan=' + encodeURIComponent(plan);
+      return;
+    }
+
+    // Signing in via my-account.html's own guard — land back on the same
+    // page rather than the generic incomplete-enrollment/home redirect.
+    if (/my-account\.html$/.test(window.location.pathname)) {
+      closeModal();
+      window.location.reload();
       return;
     }
 
@@ -396,6 +407,7 @@
         <div class="user-menu">
           <button type="button" class="user-menu-trigger">Hi, ${escapeHtml(firstName)} <span>▾</span></button>
           <div class="user-menu-panel">
+            <a href="my-account.html">My Account</a>
             <button type="button" data-action="signout">Log out</button>
           </div>
         </div>`;
@@ -495,10 +507,25 @@
     openModal('signup');
   }
 
+  // ---------------------------------------------------------------------
+  // my-account.html guard (Brief #14) — same idea as guardCheckout, but
+  // there's no "pending program" to carry through: a visitor without a
+  // session just needs to sign in and land back on this same page, which
+  // handleSignUp/handleSignIn special-case by reloading instead of
+  // running their normal post-auth redirect.
+  // ---------------------------------------------------------------------
+  async function guardMyAccount() {
+    if (!/my-account\.html$/.test(window.location.pathname)) return;
+    const session = await getCurrentSession();
+    if (session) return;
+    openModal('signin');
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     initSessionTracking();
     buildModal();
     wireEnrollLinks();
     guardCheckout();
+    guardMyAccount();
   });
 })();
