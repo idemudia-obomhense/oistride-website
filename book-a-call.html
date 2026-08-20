@@ -29,14 +29,11 @@
 
 <section class="section">
   <div class="container" style="max-width:820px;">
-    <div class="form-card reveal" style="padding:0; overflow:hidden;">
-      <div style="background:var(--bg-soft); border:1px dashed var(--border); border-radius:var(--radius); padding:60px 30px; text-align:center;">
-        <h3 style="font-size:18px; margin-bottom:10px;">Scheduler embed goes here</h3>
-        <p style="color:var(--grey); font-size:14px; max-width:440px; margin:0 auto;">Embed your Calendly (or Cal.com) booking widget in this container. See PRD §19 for the integration spec. Until then, use the quick-request form below.</p>
-      </div>
+    <div class="form-card reveal" id="calendly-card" style="padding:0; overflow:hidden;">
+      <div class="calendly-inline-widget" data-url="https://calendly.com/oistride12/30min" style="min-width:320px; height:700px;"></div>
     </div>
 
-    <div class="form-card reveal" style="margin-top:24px;">
+    <div class="form-card reveal" id="call-fallback-card" style="margin-top:24px;" hidden>
       <h3 style="font-size:17px; margin-bottom:20px;">Or send a quick request</h3>
       <form id="call-form">
         <div class="honeypot"><input type="text" name="company" tabindex="-1" autocomplete="off"></div>
@@ -56,6 +53,42 @@
 <script src="assets/js/supabase-config.js"></script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/main.js"></script>
+<script>
+// Brief #13 — Calendly embed for the "Book a Free Consultation" event,
+// with the quick-request form kept as a fallback rather than removed,
+// shown only if the embed actually fails: either the widget script
+// itself fails to load (network error, blocked), or it loads but no
+// iframe ever appears inside the container within a few seconds (bad
+// event slug, Calendly outage, aggressive ad/privacy blocking).
+(function () {
+  const calendlyCard = document.getElementById("calendly-card");
+  const widgetContainer = document.querySelector(".calendly-inline-widget");
+  const fallbackCard = document.getElementById("call-fallback-card");
+  let resolved = false;
+
+  function showFallback() {
+    if (resolved) return;
+    resolved = true;
+    if (calendlyCard) calendlyCard.hidden = true;
+    if (fallbackCard) fallbackCard.hidden = false;
+  }
+
+  const script = document.createElement("script");
+  script.src = "https://assets.calendly.com/assets/external/widget.js";
+  script.async = true;
+  script.onerror = showFallback;
+  document.body.appendChild(script);
+
+  setTimeout(() => {
+    if (resolved) return;
+    if (widgetContainer && widgetContainer.querySelector("iframe")) {
+      resolved = true; // embed rendered successfully
+    } else {
+      showFallback();
+    }
+  }, 6000);
+})();
+</script>
 <script>
 // Brief #11 — actually emails oistride12@gmail.com instead of the old
 // demo-form redirect that sent nothing anywhere.
