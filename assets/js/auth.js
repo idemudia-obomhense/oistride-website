@@ -93,6 +93,10 @@
                 </button>
               </div>
             </div>
+            <label class="consent-check">
+              <input type="checkbox" name="termsAccepted">
+              <span>I agree to OIStride's <a href="terms.html" target="_blank" rel="noopener">Terms of Service</a> and <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a></span>
+            </label>
             <div class="auth-error" hidden></div>
             <button type="submit" class="btn btn-primary btn-block">Continue</button>
           </form>
@@ -198,6 +202,12 @@
     e.preventDefault();
     const form = e.target;
     clearErrors();
+
+    if (!form.termsAccepted.checked) {
+      showError(form, 'Please agree to the Terms of Service and Privacy Policy to continue.');
+      return;
+    }
+
     const btn = form.querySelector('button[type="submit"]');
     const original = btn.textContent;
     btn.disabled = true; btn.textContent = 'Creating account…';
@@ -211,7 +221,10 @@
     const { data, error } = await client.auth.signUp({
       email,
       password,
-      options: { data: { first_name: firstName, last_name: lastName, phone: phone || null } }
+      options: { data: {
+        first_name: firstName, last_name: lastName, phone: phone || null,
+        terms_accepted: true, terms_accepted_at: new Date().toISOString(),
+      } }
     });
 
     btn.disabled = false; btn.textContent = original;
