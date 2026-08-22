@@ -433,6 +433,15 @@ section { position: relative; }
 .why-item h3 { font-size: 19px; margin-bottom: 10px; }
 .why-item p { color: var(--grey); font-size: 14.5px; }
 
+/* Pull quote */
+.pull-quote {
+  max-width: 780px; margin: 0 auto; padding: 0 20px; text-align: center;
+}
+.pull-quote p {
+  font-family: var(--font-display); font-weight: 700; color: var(--navy);
+  font-size: clamp(22px, 3vw, 30px); line-height: 1.45;
+}
+
 /* Founder */
 .founder { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 56px; align-items: center; }
 .founder-photo {
