@@ -125,7 +125,7 @@ const PROGRAMS = {
 };
 const params = new URLSearchParams(window.location.search);
 const slug = params.get("program") || "project-management";
-const program = PROGRAMS[slug] || { name: "OIStride Program", cohort: false };
+const program = PROGRAMS[slug] || { name: "OIStride Academy Program", cohort: false };
 document.getElementById("co-program-name").textContent = program.name;
 if (program.cohort) {
   document.getElementById("cohort-field").classList.remove("hidden");
