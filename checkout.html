@@ -121,7 +121,11 @@ const PROGRAMS = {
   "find-your-path": { name: "Find Your Path in Tech", cohort: false },
   "understanding-ai": { name: "Understanding AI in Today's World", cohort: false },
   "idea-to-validated-business": { name: "From Idea to Validated Business", cohort: false },
-  "build-and-test-with-ai": { name: "Build & Test Your Idea Fast with AI", cohort: false }
+  "build-and-test-with-ai": { name: "Build & Test Your Idea Fast with AI", cohort: false },
+  // Brief #23 — temporary, not linked from any page, only reachable via
+  // checkout.html?program=live-test. Remove once Jed confirms the live
+  // Paystack/webhook/DB pipeline works end to end.
+  "live-test": { name: "Internal Live Test: Do Not Share", cohort: false, priceValue: 100, anchorValue: 100 }
 };
 const params = new URLSearchParams(window.location.search);
 const slug = params.get("program") || "project-management";

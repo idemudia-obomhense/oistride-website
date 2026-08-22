@@ -11,6 +11,11 @@ const PROGRAM_PRICING = {
   "project-management": { name: "Agile Project Management", priceKobo: 25000000 }, // ₦250,000
   "product-management": { name: "Product Management", priceKobo: 25000000 }, // ₦250,000
   "ai-product-management": { name: "AI Product Management", priceKobo: 30000000 }, // ₦300,000
+  // Brief #23 — temporary, not linked from any page. Lets Jed run one real,
+  // small-amount charge through the actual live Paystack/webhook/DB pipeline
+  // before real customers start paying real course prices. Remove once
+  // confirmed working end to end.
+  "live-test": { name: "Internal Live Test: Do Not Share", priceKobo: 10000 }, // ₦100
 };
 
 const DEPOSIT_FRACTION = 0.7;
