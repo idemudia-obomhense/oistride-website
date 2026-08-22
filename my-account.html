@@ -142,13 +142,13 @@ function renderProgramCard(row) {
 
   const balanceBlock = hasBalance ? `
     <div class="slots-row" style="margin-top:16px;"><span>Paid ${paidCount} of 2</span><span>${nairaFmt(row.remaining_balance_kobo)} remaining</span></div>
-    <p style="font-size:13px; color:var(--grey); margin-top:4px;">${row.installment_status === "overdue" ? "Overdue — was due" : "Due"} ${dateFmt(row.balance_due_date)}</p>
+    <p style="font-size:13px; color:var(--grey); margin-top:4px;">${row.installment_status === "overdue" ? "Overdue since" : "Due"} ${dateFmt(row.balance_due_date)}</p>
     <button type="button" class="btn btn-primary btn-sm pay-now-btn" data-program-slug="${escapeHtml(row.program_slug)}" style="margin-top:10px;">Pay Now</button>
   ` : "";
 
   const materialsBlock = whatsappLink
     ? `<a href="${escapeHtml(whatsappLink)}" target="_blank" rel="noopener">Join your cohort WhatsApp group →</a>`
-    : `<span style="color:var(--grey);">Group invite coming soon — <a href="book-a-call.html">reach out</a> if you need it sooner.</span>`;
+    : `<span style="color:var(--grey);">Group invite coming soon. <a href="book-a-call.html">Reach out</a> if you need it sooner.</span>`;
 
   return `
     <div class="form-card">

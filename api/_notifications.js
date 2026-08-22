@@ -22,10 +22,10 @@ async function sendPaymentConfirmationEmail({ email, programName, chargeType, am
   try {
     let title, bodyHtml;
     if (chargeType === "full") {
-      title = "Payment confirmed — you're in!";
+      title = "Payment confirmed, you're in!";
       bodyHtml = `<p>Your payment of <strong>${nairaFmt(amountKobo)}</strong> for <strong>${programName}</strong> has been received in full. Your seat is secured.</p><p>A cohort community invite will follow within 24 hours.</p>`;
     } else if (chargeType === "deposit") {
-      title = "Deposit confirmed — you're in!";
+      title = "Deposit confirmed, you're in!";
       bodyHtml = `<p>Your 70% deposit of <strong>${nairaFmt(amountKobo)}</strong> for <strong>${programName}</strong> has been received. Your seat is secured.</p><p>Remaining balance: <strong>${nairaFmt(remainingBalanceKobo)}</strong>, due <strong>${formatDate(balanceDueDate)}</strong>.</p>`;
     } else if (chargeType === "balance") {
       title = "Balance payment confirmed";
@@ -49,7 +49,7 @@ async function sendBalanceReminderEmail({ email, programName, remainingBalanceKo
     const title = stage === "dueday"
       ? "Your balance is due today"
       : "Your remaining balance is due in 3 days";
-    const bodyHtml = `<p>A friendly reminder — your remaining balance of <strong>${nairaFmt(remainingBalanceKobo)}</strong> for <strong>${programName}</strong> is due ${stage === "dueday" ? "today" : `on ${formatDate(balanceDueDate)}`}.</p><p>You can pay this from your account at any time.</p>`;
+    const bodyHtml = `<p>A friendly reminder: your remaining balance of <strong>${nairaFmt(remainingBalanceKobo)}</strong> for <strong>${programName}</strong> is due ${stage === "dueday" ? "today" : `on ${formatDate(balanceDueDate)}`}.</p><p>You can pay this from your account at any time.</p>`;
     await sendEmail({ to: email, subject: title, html: wrapEmail({ title, bodyHtml }) });
   } catch (err) {
     console.error("sendBalanceReminderEmail failed:", err);

@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (err) {
         console.error(err);
         btn.disabled = false;
-        btn.textContent = "Couldn't subscribe — try again";
+        btn.textContent = "Couldn't subscribe, try again";
         setTimeout(() => { btn.textContent = original; }, 2400);
       }
     });

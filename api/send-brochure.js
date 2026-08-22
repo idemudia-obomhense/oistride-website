@@ -66,7 +66,7 @@ module.exports = async (req, res) => {
       subject: `Your ${brochure.programName} brochure`,
       html: wrapEmail({
         title: `Hi ${firstName}, here's your brochure`,
-        bodyHtml: `<p>Thanks for your interest in <strong>${brochure.programName}</strong> — the full program brochure is attached to this email.</p><p>Ready to take the next step? You can enroll anytime.</p>`,
+        bodyHtml: `<p>Thanks for your interest in <strong>${brochure.programName}</strong>. The full program brochure is attached to this email.</p><p>Ready to take the next step? You can enroll anytime.</p>`,
         ctaLabel: "View Programs",
         ctaUrl: `${origin}/programs-catalog.html`,
       }),

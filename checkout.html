@@ -281,7 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const { data: { session } } = await OIStrideAuth.client.auth.getSession();
       if (!session) {
-        showError("Your session expired — please sign in again and retry.");
+        showError("Your session expired. Please sign in again and retry.");
         return;
       }
 

@@ -38,9 +38,9 @@
   const heading = document.getElementById('ty-heading');
   const body = document.getElementById('ty-body');
   const copy = {
-    brochure: ["Your brochure is on its way.", "Check your inbox — we've sent the full PDF to the email you provided. Ready to take the next step? You can enroll anytime."],
-    'brochure-pm': ["Your brochure is on its way.", "Check your inbox — we've sent the full PDF to the email you provided. Ready to take the next step? You can enroll anytime."],
-    'brochure-aipm': ["Your brochure is on its way.", "Check your inbox — we've sent the full PDF to the email you provided. Ready to take the next step? You can enroll anytime."],
+    brochure: ["Your brochure is on its way.", "Check your inbox. We've sent the full PDF to the email you provided. Ready to take the next step? You can enroll anytime."],
+    'brochure-pm': ["Your brochure is on its way.", "Check your inbox. We've sent the full PDF to the email you provided. Ready to take the next step? You can enroll anytime."],
+    'brochure-aipm': ["Your brochure is on its way.", "Check your inbox. We've sent the full PDF to the email you provided. Ready to take the next step? You can enroll anytime."],
     payment: ["Payment successful, you're in.", "You've secured your seat. A confirmation email is on its way, along with your cohort community invite (WhatsApp/community group) within 24 hours."],
     call: ["Request received.", "Jed will confirm a time with you shortly by email or WhatsApp."]
   };
@@ -74,7 +74,7 @@
 
     if (!res.ok || data.status !== 'success') {
       heading.textContent = "We couldn't confirm this payment yet.";
-      body.textContent = "If you were charged, this can just be a brief delay — check your email for a receipt, or contact us if it doesn't arrive shortly.";
+      body.textContent = "If you were charged, this can just be a brief delay. Check your email for a receipt, or contact us if it doesn't arrive shortly.";
       return;
     }
 
@@ -90,7 +90,7 @@
   } catch (err) {
     console.error(err);
     heading.textContent = "We couldn't confirm this payment yet.";
-    body.textContent = "If you were charged, this can just be a brief delay — check your email for a receipt, or contact us if it doesn't arrive shortly.";
+    body.textContent = "If you were charged, this can just be a brief delay. Check your email for a receipt, or contact us if it doesn't arrive shortly.";
   }
 })();
 </script>
