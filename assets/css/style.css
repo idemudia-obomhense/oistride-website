@@ -677,7 +677,7 @@ section { position: relative; }
 .step-dot { flex: 1; height: 4px; border-radius: 4px; background: var(--border); }
 .step-dot.active { background: var(--indigo); }
 .form-nav { display: flex; justify-content: space-between; margin-top: 28px; }
-.honeypot { position: absolute; left: -9999px; opacity: 0; height: 0; }
+.honeypot { display: none; }
 
 /* Auth modal (Sign Up / Sign In / Forgot Password) */
 .auth-overlay {
