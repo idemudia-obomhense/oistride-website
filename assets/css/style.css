@@ -155,13 +155,16 @@ section { position: relative; }
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
 }
-.nav .container { display: flex; align-items: center; justify-content: space-between; height: 78px; }
+/* column-gap guarantees real breathing room between nav-links and
+   nav-cta — space-between alone let them run together edge-to-edge once
+   nav-links grew to 6 items (Brief #25 follow-up: "Learning Experience"). */
+.nav .container { display: flex; align-items: center; justify-content: space-between; column-gap: 28px; height: 78px; }
 .nav-logo { flex-shrink: 0; }
 .nav-logo img { height: 30px; width: auto; }
 .nav-links { display: flex; align-items: center; gap: 34px; }
 .nav-links a {
   font-size: 14.5px; font-weight: 500; color: var(--navy);
-  position: relative; padding: 6px 0;
+  position: relative; padding: 6px 0; white-space: nowrap;
 }
 .nav-links a:hover { color: var(--indigo); }
 .nav-links a.active { color: var(--indigo); font-weight: 700; }
@@ -171,7 +174,7 @@ section { position: relative; }
 }
 .nav-cta { display: flex; align-items: center; gap: 18px; }
 .nav-btn-short { display: none; }
-.nav-signin { font-size: 14.5px; font-weight: 600; color: var(--navy); }
+.nav-signin { font-size: 14.5px; font-weight: 600; color: var(--navy); white-space: nowrap; }
 .nav-signin:hover { color: var(--indigo); }
 
 .user-menu { position: relative; }
@@ -204,6 +207,41 @@ section { position: relative; }
 .user-menu-panel button:hover, .user-menu-panel a:hover { background: var(--bg-soft); }
 .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 6px; }
 .nav-toggle span { display: block; width: 22px; height: 2px; background: var(--navy); margin: 5px 0; border-radius: 2px; }
+
+/* Nav hamburger cutover, 1280px (Brief #25 + follow-up) — raised from the
+   old 768px cutover because nav-links grew to 6 items (added "Learning
+   Experience") and nav-cta carries two full-length-label buttons
+   (Explore Programs + Book a Free Consultation) on most pages. The
+   standalone "Contact" nav-cta button was dropped entirely on the pages
+   that had it (still reachable via the footer) rather than pushing this
+   breakpoint past ~1350px, which would have put common 1280-1366px
+   laptop widths into hamburger mode just to fit one more button. Also
+   accounts for .nav .container's column-gap (added below) — without a
+   guaranteed minimum gap, nav-links and nav-cta ran together edge-to-edge
+   at this width instead of overflowing outright. Kept separate from the
+   phone-only layout reflow rules below (grid stacking, section padding,
+   etc.), which still switch at 768px. assets/js/main.js's resize handler
+   uses the same 1280px threshold. */
+@media (max-width: 1280px) {
+  .nav-links { display: none; }
+  .nav-cta .btn-outline { display: none; }
+  .nav-toggle { display: block; z-index: 210; position: relative; }
+  .nav-toggle span { transition: transform 0.2s ease, opacity 0.2s ease; }
+  .nav-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-toggle.active span:nth-child(2) { opacity: 0; }
+  .nav-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .nav-links.mobile-open {
+    display: flex; flex-direction: column; align-items: stretch;
+    position: fixed; top: 78px; left: 0; right: 0; height: calc(100vh - 78px); z-index: 190;
+    background: #fff; padding: 12px 28px 40px; gap: 2px;
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+  }
+  .nav-links.mobile-open a {
+    padding: 16px 4px; font-size: 18px; border-bottom: 1px solid var(--border);
+    min-height: 44px; display: flex; align-items: center;
+  }
+}
 
 /* ==========================================================================
    HERO — signature "stride path" motif
@@ -418,6 +456,7 @@ section { position: relative; }
 .deepdive-list { list-style: none; margin: 28px 0 0; padding: 0; display: flex; flex-direction: column; gap: 18px; }
 .deepdive-list li { display: flex; gap: 14px; font-size: 15px; }
 .deepdive-list li .num { font-family: var(--font-display); font-weight: 800; color: var(--indigo-light); font-size: 14px; padding-top: 2px; }
+.deepdive-list li strong { white-space: nowrap; }
 .deepdive-card {
   background: var(--navy); border-radius: var(--radius); padding: 32px; color: #fff;
 }
@@ -427,7 +466,7 @@ section { position: relative; }
 .fact-row span:last-child { font-weight: 600; }
 
 /* Why grid */
-.why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+.why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
 .why-item { text-align: left; }
 .why-item .idx { font-family: var(--font-display); font-weight: 800; font-size: 13px; color: var(--indigo); letter-spacing: 0.08em; margin-bottom: 14px; }
 .why-item h3 { font-size: 19px; margin-bottom: 10px; }
@@ -558,10 +597,24 @@ section { position: relative; }
 .pricing-features li { font-size: 13.5px; padding-left: 24px; position: relative; }
 .pricing-features li::before { content: "✓"; position: absolute; left: 0; color: var(--indigo); font-weight: 700; }
 
-/* Impact stats */
-.impact-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: center; }
-.impact-stats .num { font-family: var(--font-display); font-weight: 800; font-size: 40px; color: var(--indigo); }
-.impact-stats .lbl { font-size: 13.5px; color: var(--grey); margin-top: 6px; }
+/* Values grid (Brief #25) */
+.value-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.value-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; }
+.value-card h4 { font-size: 16.5px; color: var(--navy); margin-bottom: 8px; }
+.value-card p { color: var(--grey); font-size: 14px; line-height: 1.6; }
+
+/* Belief statement list (Brief #25 — "What We Stand For") */
+.belief-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px 32px; }
+.belief-list li { font-size: 15px; color: var(--navy); line-height: 1.6; padding-left: 28px; position: relative; }
+.belief-list li::before { content: "✓"; position: absolute; left: 0; color: var(--indigo); font-weight: 700; }
+
+/* Label/value info rows (Brief #25 — comparison table, org-needs lookup,
+   principles, engagement steps) */
+.info-list { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: #fff; }
+.info-row { display: grid; grid-template-columns: 220px 1fr; gap: 24px; padding: 20px 24px; border-bottom: 1px solid var(--border); }
+.info-row:last-child { border-bottom: none; }
+.info-row .info-label { font-weight: 700; color: var(--navy); font-size: 14.5px; }
+.info-row .info-value { color: var(--grey); font-size: 14.5px; line-height: 1.6; }
 
 /* Timeline */
 .timeline { position: relative; padding-left: 8px; }
@@ -821,12 +874,13 @@ section { position: relative; }
    ========================================================================== */
 /* Tablet: 768–1024px — mostly follows the mobile stacking patterns below */
 @media (max-width: 1024px) {
-  .pillars, .program-grid, .why-grid, .cat-grid { grid-template-columns: repeat(2, 1fr); }
+  .pillars, .program-grid, .why-grid, .cat-grid, .value-grid { grid-template-columns: repeat(2, 1fr); }
   .deepdive, .founder, .two-col { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .trust-track { grid-template-columns: repeat(2, 1fr); row-gap: 12px; }
   .job-grid { grid-template-columns: repeat(2, 1fr); }
   .cert-block { grid-template-columns: 1fr; }
+  .info-row { grid-template-columns: 160px 1fr; gap: 16px; }
 }
 
 /* Mobile: below 768px */
@@ -834,27 +888,12 @@ section { position: relative; }
   html { -webkit-text-size-adjust: 100%; }
   body { overflow-x: hidden; }
 
-  /* Nav: hamburger + full-screen overlay menu. Sign In / logged-in menu
-     stays in the top bar at all times — never buried in the hamburger. */
-  .nav-links { display: none; }
-  .nav-cta .btn-outline { display: none; }
-  .nav-toggle { display: block; z-index: 210; position: relative; }
-  .nav-toggle span { transition: transform 0.2s ease, opacity 0.2s ease; }
-  .nav-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-  .nav-toggle.active span:nth-child(2) { opacity: 0; }
-  .nav-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-  .nav-links.mobile-open {
-    display: flex; flex-direction: column; align-items: stretch;
-    position: fixed; top: 78px; left: 0; right: 0; height: calc(100vh - 78px); z-index: 190;
-    background: #fff; padding: 12px 28px 40px; gap: 2px;
-    overflow-y: auto; -webkit-overflow-scrolling: touch;
-  }
-  .nav-links.mobile-open a {
-    padding: 16px 4px; font-size: 18px; border-bottom: 1px solid var(--border);
-    min-height: 44px; display: flex; align-items: center;
-  }
-  .pillars, .program-grid, .why-grid, .fit-grid, .form-grid-2, .job-grid, .cat-grid { grid-template-columns: 1fr; }
+  /* Nav hamburger + full-screen overlay menu rules now live in the 1024px
+     breakpoint above, since nav-cta stopped fitting well before phone
+     widths. Sign In / logged-in menu stays in the top bar at all times —
+     never buried in the hamburger. */
+  .pillars, .program-grid, .why-grid, .fit-grid, .form-grid-2, .job-grid, .cat-grid, .value-grid, .belief-list { grid-template-columns: 1fr; }
+  .info-row { grid-template-columns: 1fr; gap: 6px; }
   .section { padding: 64px 0; }
   .hero { padding: 116px 0 60px; }
   .founder-photo { aspect-ratio: 16/10; }
