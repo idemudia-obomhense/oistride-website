@@ -234,6 +234,28 @@
     currentSession = data.session;
     refreshNavState();
 
+    // Brief #26 — welcome email + internal signup notification, both
+    // fire-and-forget. There's no email verification step right now, so
+    // the welcome email is the only confirmation a user gets that their
+    // account actually worked, but a failed send here must never block
+    // or delay the signup flow itself (same principle as the checkout
+    // phone-save fix).
+    fetch('/api/send-welcome-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName, email }),
+    }).catch((err) => {
+      console.error('Welcome email failed to send (not blocking signup):', err);
+    });
+
+    fetch('/api/send-notification', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ formType: 'signup', firstName, lastName, email, phone }),
+    }).catch((err) => {
+      console.error('Signup notification failed to send (not blocking signup):', err);
+    });
+
     const pendingProgram = sessionStorage.getItem(PENDING_PROGRAM_KEY);
     if (pendingProgram && data.user) {
       const cohortStartDate = parseCohortMonth(sessionStorage.getItem(PENDING_COHORT_KEY));
