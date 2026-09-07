@@ -242,6 +242,27 @@ async function insertWebinarRegistration(fields) {
   }
 }
 
+// Brief (duplicate registration check) — true if this person (matched
+// by email OR phone, not both required) already has a row for this
+// exact webinar. PostgREST's or=(...) filter needs its structural
+// characters (parens/commas/the eq. operator) left literal in the URL;
+// only the actual values are encodeURIComponent'd.
+async function findExistingWebinarRegistration(webinarSlug, email, phone) {
+  const key = requireServiceRoleKey();
+  const conditions = [`email.eq.${encodeURIComponent(email)}`];
+  if (phone) conditions.push(`phone.eq.${encodeURIComponent(phone)}`);
+  const url = `${SUPABASE_URL}/rest/v1/webinar_registrations?webinar_slug=eq.${encodeURIComponent(webinarSlug)}&or=(${conditions.join(",")})&select=id&limit=1`;
+  const res = await fetch(url, {
+    headers: { apikey: key, Authorization: `Bearer ${key}` },
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Supabase read failed (${res.status}): ${text}`);
+  }
+  const rows = await res.json();
+  return rows.length > 0;
+}
+
 module.exports = {
   getUserFromAccessToken,
   upsertEnrollment,
@@ -253,4 +274,5 @@ module.exports = {
   updateEnrollmentById,
   insertNewsletterSubscriber,
   insertWebinarRegistration,
+  findExistingWebinarRegistration,
 };

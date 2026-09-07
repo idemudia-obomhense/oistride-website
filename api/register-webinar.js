@@ -15,7 +15,7 @@
 // or unreachable webhook can never hang or fail a registration that
 // already succeeded once the Supabase write above completes.
 
-const { insertWebinarRegistration } = require("./_supabase");
+const { insertWebinarRegistration, findExistingWebinarRegistration } = require("./_supabase");
 const { sendEmail } = require("./_resend");
 const { wrapEmail, escapeHtml } = require("./_email-templates");
 
@@ -90,6 +90,15 @@ module.exports = async (req, res) => {
     const cleanOccupation = typeof occupation === "string" && occupation.trim() ? occupation.trim() : null;
     const cleanHowHeard = typeof howHeard === "string" && howHeard.trim() ? howHeard.trim() : null;
 
+    // Someone already registered for this exact event (matched by email
+    // OR phone) gets rejected outright — no new row, no emails, a real
+    // error back to the form instead of the success screen.
+    const isDuplicate = await findExistingWebinarRegistration(webinarSlug, email, cleanPhone);
+    if (isDuplicate) {
+      res.status(409).json({ error: "This email and phone number has already been registered for this event." });
+      return;
+    }
+
     await insertWebinarRegistration({
       webinar_slug: webinarSlug,
       name: cleanName,
@@ -109,7 +118,7 @@ module.exports = async (req, res) => {
         subject: `You're registered: ${webinar.title}`,
         html: wrapEmail({
           title: "You're registered!",
-          bodyHtml: `<p>Hi ${escapeHtml(firstName)},</p><p>You're confirmed for <strong>${escapeHtml(webinar.title)}</strong>.</p><p style="margin:4px 0;"><strong>When:</strong> ${escapeHtml(eventDateDisplay)}</p><p style="margin:4px 0;"><strong>Where:</strong> Google Meet, link below. The link goes live once the session starts.</p><p style="margin-top:20px;"><a href="${gcalUrl}" style="color:#FF4D6D; font-weight:600;">Add to Google Calendar</a></p><p style="margin-top:20px;">See you there,<br>OIStride Academy</p>`,
+          bodyHtml: `<p>Hi ${escapeHtml(firstName)},</p><p>You're confirmed for <strong>${escapeHtml(webinar.title)}</strong>.</p><p style="margin:4px 0;"><strong>When:</strong> ${escapeHtml(eventDateDisplay)}</p><p style="margin:4px 0;"><strong>Where:</strong> Google Meet, link below. The link goes live once the session starts.</p><div style="margin-top:20px;"><a href="${gcalUrl}" style="background:#FF4D6D; color:#fff; text-decoration:none; font-weight:600; padding:14px 28px; border-radius:8px; display:inline-block; font-family:Arial,Helvetica,sans-serif;">Add to Google Calendar</a></div><p style="margin-top:20px;">See you there,<br>OIStride Academy</p>`,
           ctaLabel: "Meet Link",
           ctaUrl: webinar.meetLink,
         }),
