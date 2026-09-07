@@ -35,9 +35,7 @@ window.WEBINARS = [
     // Saturday, September 26, 2026, 3:00-5:00 PM WAT (WAT = UTC+1).
     startAt: "2026-09-26T14:00:00Z",
     endAt: "2026-09-26T16:00:00Z",
-    // TODO: placeholder gradient — swap for the real flyer image once
-    // Jed has it. Still pending as of this writing.
-    flyerColor: "linear-gradient(135deg, #6C5CE7, #22D3EE)",
+    flyerImage: "assets/img/masterclass-sept-2026.jpg.png",
     meetLink: "https://meet.google.com/jzi-zdmc-ymi",
     recordingLink: null,
   },

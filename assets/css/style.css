@@ -618,7 +618,10 @@ section { position: relative; }
   transition: transform 0.2s ease, box-shadow 0.2s ease; text-decoration: none;
 }
 .webinar-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-sm); }
-.webinar-flyer { aspect-ratio: 16/9; }
+/* 3/4 matches the portrait poster proportions real event flyers use
+   (e.g. masterclass-sept-2026.jpg.png is 1092x1440) — a wide 16:9 box
+   here was cropping most of a portrait flyer's actual content away. */
+.webinar-flyer { aspect-ratio: 3/4; }
 .webinar-card-body { padding: 20px 22px 24px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
 .webinar-card-body h3 { font-size: 17px; color: var(--navy); }
 .webinar-card-date { font-size: 13.5px; color: var(--grey); }
@@ -629,7 +632,10 @@ section { position: relative; }
 .status-upcoming { background: var(--accent-ai-pale); color: var(--accent-ai-dark); }
 .status-passed { background: var(--bg-soft); color: var(--grey); }
 
-.webinar-event-flyer { aspect-ratio: 21/9; border-radius: var(--radius); margin-bottom: 28px; }
+/* Same portrait-poster reasoning as .webinar-flyer above — constrained
+   to a sane max-width instead of stretching a tall portrait image
+   edge-to-edge across the full content column. */
+.webinar-event-flyer { aspect-ratio: 3/4; max-width: 420px; margin: 0 auto 28px; border-radius: var(--radius); }
 .webinar-meta-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 14px 0 20px; }
 
 /* Job opportunities grid */
