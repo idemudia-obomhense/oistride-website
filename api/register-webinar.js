@@ -8,6 +8,12 @@
 // notification to Jed, each wrapped in its own try/catch so a Resend
 // hiccup can never turn an otherwise-successful registration into an
 // error the visitor sees.
+//
+// Brief #28 — also mirrors the registration to Jed's Google Sheet via
+// an Apps Script webhook, same best-effort principle: its own
+// try/catch plus an explicit timeout (via AbortController), so a slow
+// or unreachable webhook can never hang or fail a registration that
+// already succeeded once the Supabase write above completes.
 
 const { insertWebinarRegistration } = require("./_supabase");
 const { sendEmail } = require("./_resend");
@@ -16,6 +22,12 @@ const { wrapEmail, escapeHtml } = require("./_email-templates");
 function isValidEmail(email) {
   return typeof email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
+
+// Brief #28 — Jed's Google Apps Script webhook, mirroring registrations
+// into his Google Sheet. WEBINAR_SHEET_SECRET is added directly in
+// Vercel's environment variables (never hardcoded/committed here); the
+// script rejects requests whose secret doesn't match.
+const WEBINAR_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw2yRIbdlK7JmwsyzQi9VxAvlsZWbpfjflcgXIS36R40TMb5DA3Sh89-YfKRS_Zq3V_Tg/exec";
 
 // Mirrors assets/js/webinars-data.js — kept as a small server-side copy
 // of just the fields this endpoint needs, since that file is a plain
@@ -106,6 +118,30 @@ module.exports = async (req, res) => {
       });
     } catch (err) {
       console.error("webinar notification email failed:", err);
+    }
+
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+      try {
+        await fetch(WEBINAR_SHEET_WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: cleanName,
+            email,
+            phone: cleanPhone,
+            occupation: cleanOccupation,
+            howHeard: cleanHowHeard,
+            secret: process.env.WEBINAR_SHEET_SECRET,
+          }),
+          signal: controller.signal,
+        });
+      } finally {
+        clearTimeout(timeout);
+      }
+    } catch (err) {
+      console.error("webinar Google Sheets sync failed:", err);
     }
 
     res.status(200).json({ ok: true });
