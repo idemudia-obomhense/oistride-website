@@ -28,9 +28,7 @@ window.WEBINARS = [
     // TODO: placeholder gradient — swap for the real flyer image once
     // Jed has it. Still pending as of this writing.
     flyerColor: "linear-gradient(135deg, #6C5CE7, #22D3EE)",
-    // TODO: replace with the real Google Meet link before this goes live.
-    // Still pending as of this writing.
-    meetLink: "https://meet.google.com/replace-with-real-link",
+    meetLink: "https://meet.google.com/jzi-zdmc-ymi",
     recordingLink: null,
   },
 ];

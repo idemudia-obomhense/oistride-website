@@ -34,12 +34,13 @@ const WEBINAR_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw2yR
 // <script> global, not something a serverless function can require()
 // (same reasoning api/_dates.js's month names are duplicated in
 // assets/js/auth.js). Update both when adding/editing a webinar.
-// TODO: replace with the real Google Meet link before this goes live.
 const WEBINARS = {
   "building-a-career-in-tech-and-ai": {
     title: "Building a Career in Tech & AI",
     startAt: "2026-09-26T14:00:00Z",
-    meetLink: "https://meet.google.com/replace-with-real-link",
+    endAt: "2026-09-26T16:00:00Z",
+    meetLink: "https://meet.google.com/jzi-zdmc-ymi",
+    description: "Building a Career in Tech & AI is a free, practical masterclass for people who want to build a meaningful career in technology but are unsure what to learn, where to start, or how to turn learning into real opportunities.",
   },
 };
 
@@ -47,6 +48,22 @@ function formatEventDateTime(iso) {
   return new Date(iso).toLocaleString("en-US", {
     dateStyle: "full", timeStyle: "short", timeZone: "Africa/Lagos",
   }) + " WAT";
+}
+
+// Google Calendar's quick-add URL wants YYYYMMDDTHHMMSSZ, not plain ISO 8601.
+function toGoogleCalendarDateTime(iso) {
+  return new Date(iso).toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+}
+
+function buildGoogleCalendarUrl(webinar) {
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: webinar.title,
+    dates: `${toGoogleCalendarDateTime(webinar.startAt)}/${toGoogleCalendarDateTime(webinar.endAt)}`,
+    details: webinar.description,
+    location: webinar.meetLink,
+  });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
 module.exports = async (req, res) => {
@@ -86,12 +103,13 @@ module.exports = async (req, res) => {
     const eventDateDisplay = formatEventDateTime(webinar.startAt);
 
     try {
+      const gcalUrl = buildGoogleCalendarUrl(webinar);
       await sendEmail({
         to: email,
         subject: `You're registered: ${webinar.title}`,
         html: wrapEmail({
           title: "You're registered!",
-          bodyHtml: `<p>Hi ${escapeHtml(firstName)},</p><p>You're confirmed for <strong>${escapeHtml(webinar.title)}</strong>.</p><p style="margin:4px 0;"><strong>When:</strong> ${escapeHtml(eventDateDisplay)}</p><p style="margin:4px 0;"><strong>Where:</strong> Google Meet, link below. The link goes live once the session starts.</p><p style="margin-top:20px;">See you there,<br>OIStride Academy</p>`,
+          bodyHtml: `<p>Hi ${escapeHtml(firstName)},</p><p>You're confirmed for <strong>${escapeHtml(webinar.title)}</strong>.</p><p style="margin:4px 0;"><strong>When:</strong> ${escapeHtml(eventDateDisplay)}</p><p style="margin:4px 0;"><strong>Where:</strong> Google Meet, link below. The link goes live once the session starts.</p><p style="margin-top:20px;"><a href="${gcalUrl}" style="color:#FF4D6D; font-weight:600;">Add to Google Calendar</a></p><p style="margin-top:20px;">See you there,<br>OIStride Academy</p>`,
           ctaLabel: "Meet Link",
           ctaUrl: webinar.meetLink,
         }),
