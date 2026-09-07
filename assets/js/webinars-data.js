@@ -9,18 +9,27 @@
 //
 // startAt/endAt are ISO 8601 UTC. Status is always computed from these
 // at render time (never stored), the same pattern already used for
-// cohort status in my-account.html.
+// cohort status in my-account.html. `subtitle` is optional; `description`
+// can be a single string or an array of paragraph strings.
 window.WEBINARS = [
   {
-    slug: "product-thinking-masterclass",
-    title: "The Product Thinking Masterclass",
-    description: "A live, practitioner-led session on how real product teams turn a vague idea into a decision they can defend. Bring your questions, this is interactive, not a lecture.",
-    // Placeholder date a few days out — adjust to test each of the 3
-    // states on webinar.html (before / during / after).
-    startAt: "2026-09-10T15:00:00Z",
-    endAt: "2026-09-10T17:00:00Z",
+    slug: "building-a-career-in-tech-and-ai",
+    title: "Building a Career in Tech & AI",
+    subtitle: "How to choose the right tech skills, build real capability & put knowledge to work",
+    description: [
+      "Building a Career in Tech & AI is a free, practical masterclass for people who want to build a meaningful career in technology but are unsure what to learn, where to start, or how to turn learning into real opportunities.",
+      "This session will help you understand how to choose tech skills based on your goals, build genuine capability through practice, and move beyond simply collecting courses and certificates.",
+      "Hosted by Obomhense Idemudia, Senior Product Manager, Trainer and Founder of OIStride Academy, the masterclass combines real industry experience, practical guidance, and honest conversations about building a career in today's technology and AI-driven world.",
+      "The goal is simple: help you make better decisions about what to learn, how to learn it, and how to put those skills to work.",
+    ],
+    // Saturday, September 26, 2026, 3:00-5:00 PM WAT (WAT = UTC+1).
+    startAt: "2026-09-26T14:00:00Z",
+    endAt: "2026-09-26T16:00:00Z",
+    // TODO: placeholder gradient — swap for the real flyer image once
+    // Jed has it. Still pending as of this writing.
     flyerColor: "linear-gradient(135deg, #6C5CE7, #22D3EE)",
     // TODO: replace with the real Google Meet link before this goes live.
+    // Still pending as of this writing.
     meetLink: "https://meet.google.com/replace-with-real-link",
     recordingLink: null,
   },

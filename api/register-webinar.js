@@ -24,9 +24,9 @@ function isValidEmail(email) {
 // assets/js/auth.js). Update both when adding/editing a webinar.
 // TODO: replace with the real Google Meet link before this goes live.
 const WEBINARS = {
-  "product-thinking-masterclass": {
-    title: "The Product Thinking Masterclass",
-    startAt: "2026-09-10T15:00:00Z",
+  "building-a-career-in-tech-and-ai": {
+    title: "Building a Career in Tech & AI",
+    startAt: "2026-09-26T14:00:00Z",
     meetLink: "https://meet.google.com/replace-with-real-link",
   },
 };
