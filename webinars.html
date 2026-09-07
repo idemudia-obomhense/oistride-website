@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Webinars — OIStride Academy</title>
+<meta name="description" content="Free live webinars from OIStride Academy — practical, practitioner-led sessions on product, project management and AI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<nav class="nav">
+  <div class="container">
+    <a href="index.html" class="nav-logo"><img src="assets/img/logo.png" alt="OIStride"></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="programs-catalog.html">Programs</a>
+      <a href="webinars.html" class="active">Webinars</a>
+      <a href="index.html#why-oistride-academy">Learning Experience</a>
+      <a href="consulting.html">Consulting</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+    </div>
+    <div class="nav-cta">
+      <div data-auth-slot></div>
+      <a href="programs-catalog.html" class="btn btn-primary btn-sm"><span class="nav-btn-full">Explore Programs</span><span class="nav-btn-short">Programs</span></a>
+      <a href="book-a-call.html" class="btn btn-outline btn-sm"><span class="nav-btn-full">Book a Free Consultation</span><span class="nav-btn-short">Book a Call</span></a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<header class="page-hero" style="padding-bottom:60px;">
+  <div class="container">
+    <span class="eyebrow">Free Live Sessions</span>
+    <h1>Webinars</h1>
+    <p class="lead">Free, live, practitioner-led sessions, open to anyone. No enrollment required.</p>
+  </div>
+</header>
+
+<section class="section" style="padding-top:60px;">
+  <div class="container">
+    <div id="webinar-grid" class="webinar-grid"></div>
+    <p id="webinar-empty" class="reveal" style="text-align:center; color:var(--grey); display:none;">No webinars scheduled right now. Check back soon.</p>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo"><img src="assets/img/logo-dark.png" alt="OIStride"></div>
+        <p style="font-size:14px; max-width:260px;">A practice-led technology-skills academy helping people build practical capabilities they can use in the real world.</p>
+      </div>
+      <div><h5>Programs</h5><ul>
+        <li><a href="programs-catalog.html">All Programs &amp; Services</a></li>
+        <li><a href="program-product-management.html">Product Management</a></li>
+        <li><a href="program-ai-product-management.html">AI Product Management</a></li>
+        <li><a href="program-agile-project-management.html">Agile Project Management</a></li>
+        <li><a href="program-career.html">Career Acceleration</a></li>
+        <li><a href="program-ai.html">AI Fluency &amp; Building</a></li>
+        <li><a href="consulting.html">Consulting</a></li>
+      </ul></div>
+      <div><h5>Company</h5><ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="webinars.html">Webinars</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="book-a-call.html">Book a Call</a></li>
+      </ul></div>
+      <div><h5>Contact</h5><ul>
+        <li><a href="mailto:oistride12@gmail.com">oistride12@gmail.com</a></li>
+        <li><a href="https://wa.me/2347043202407" target="_blank" rel="noopener">WhatsApp: 07043202407</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 OIStride Limited. All rights reserved.</span><span><a href="privacy.html">Privacy Policy</a> &nbsp;·&nbsp; <a href="terms.html">Terms of Service</a></span></div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase-config.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/webinars-data.js"></script>
+<script>
+(function () {
+  const grid = document.getElementById('webinar-grid');
+  const empty = document.getElementById('webinar-empty');
+  const webinars = window.WEBINARS || [];
+
+  if (!webinars.length) {
+    empty.style.display = 'block';
+    return;
+  }
+
+  const STATUS_LABELS = { upcoming: 'Upcoming', passed: 'Passed' };
+
+  grid.innerHTML = webinars.map((w) => {
+    const status = window.getWebinarListStatus(w);
+    return `
+      <a class="webinar-card reveal" href="webinar.html?slug=${encodeURIComponent(w.slug)}">
+        <div class="webinar-flyer" style="background:${w.flyerImage ? `url('${w.flyerImage}') center/cover` : w.flyerColor};"></div>
+        <div class="webinar-card-body">
+          <span class="status-badge status-${status}">${STATUS_LABELS[status]}</span>
+          <h3>${w.title}</h3>
+          <span class="webinar-card-date">${window.formatWebinarDateTime(w.startAt)}</span>
+          <span class="btn btn-primary btn-sm btn-block" style="margin-top:auto;">View Details</span>
+        </div>
+      </a>
+    `;
+  }).join('');
+})();
+</script>
+</body>
+</html>

@@ -127,3 +127,30 @@ alter table public.enrollments
   add column if not exists reminder_3day_sent_at timestamptz,
   add column if not exists reminder_dueday_sent_at timestamptz,
   add column if not exists reminder_escalated_at timestamptz;
+
+-- ---------------------------------------------------------------------
+-- Webinar registrations (Claude Code Brief #27)
+-- No RLS insert policy on purpose — same reasoning as
+-- newsletter_subscribers above: only ever written via
+-- api/register-webinar.js using the service role key, never directly
+-- from the browser. RLS stays enabled as a default-deny backstop.
+--
+-- webinar_slug is a plain text column, not a foreign key, since the
+-- webinar catalog itself lives in assets/js/webinars-data.js (a static
+-- data file, not a database table) — a new event just needs a new
+-- entry there, no migration required.
+-- ---------------------------------------------------------------------
+create table if not exists public.webinar_registrations (
+  id uuid primary key default gen_random_uuid(),
+  webinar_slug text not null,
+  name text not null,
+  email text not null,
+  phone text,
+  occupation text,
+  how_heard text,
+  registered_at timestamptz not null default now()
+);
+
+create index if not exists webinar_registrations_slug_idx on public.webinar_registrations (webinar_slug);
+
+alter table public.webinar_registrations enable row level security;

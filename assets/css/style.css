@@ -161,9 +161,16 @@ section { position: relative; }
 .nav .container { display: flex; align-items: center; justify-content: space-between; column-gap: 28px; height: 78px; }
 .nav-logo { flex-shrink: 0; }
 .nav-logo img { height: 30px; width: auto; }
-.nav-links { display: flex; align-items: center; gap: 34px; }
+/* gap/font-size reduced from 34px/14.5px (Brief #27 — added "Webinars"):
+   nav-links reaching 7 items pushed the 1280px hamburger cutover past
+   1440px, a genuinely common desktop width. Tightening the row's own
+   density bought back enough room to keep the existing 1280px
+   breakpoint rather than raising it into more desktop widths again —
+   the same tradeoff each nav-link addition eventually forces if the
+   breakpoint keeps moving instead. */
+.nav-links { display: flex; align-items: center; gap: 22px; }
 .nav-links a {
-  font-size: 14.5px; font-weight: 500; color: var(--navy);
+  font-size: 13.5px; font-weight: 500; color: var(--navy);
   position: relative; padding: 6px 0; white-space: nowrap;
 }
 .nav-links a:hover { color: var(--indigo); }
@@ -603,6 +610,28 @@ section { position: relative; }
 .price-detail.active { display: block; }
 .price-note { font-size: 12px; color: var(--grey); margin-top: 4px; }
 
+/* Webinars (Brief #27) */
+.webinar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.webinar-card {
+  display: flex; flex-direction: column; border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden; background: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease; text-decoration: none;
+}
+.webinar-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-sm); }
+.webinar-flyer { aspect-ratio: 16/9; }
+.webinar-card-body { padding: 20px 22px 24px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.webinar-card-body h3 { font-size: 17px; color: var(--navy); }
+.webinar-card-date { font-size: 13.5px; color: var(--grey); }
+.status-badge {
+  display: inline-flex; align-self: flex-start; font-size: 11.5px; font-weight: 700;
+  letter-spacing: 0.05em; text-transform: uppercase; padding: 5px 12px; border-radius: 20px;
+}
+.status-upcoming { background: var(--accent-ai-pale); color: var(--accent-ai-dark); }
+.status-passed { background: var(--bg-soft); color: var(--grey); }
+
+.webinar-event-flyer { aspect-ratio: 21/9; border-radius: var(--radius); margin-bottom: 28px; }
+.webinar-meta-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 14px 0 20px; }
+
 /* Job opportunities grid */
 .job-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 24px; }
 .job-pill {
@@ -822,7 +851,7 @@ section { position: relative; }
    ========================================================================== */
 /* Tablet: 768–1024px — mostly follows the mobile stacking patterns below */
 @media (max-width: 1024px) {
-  .pillars, .program-grid, .why-grid, .cat-grid, .value-grid { grid-template-columns: repeat(2, 1fr); }
+  .pillars, .program-grid, .why-grid, .cat-grid, .value-grid, .webinar-grid { grid-template-columns: repeat(2, 1fr); }
   .deepdive, .founder, .two-col { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .trust-track { grid-template-columns: repeat(2, 1fr); row-gap: 12px; }
@@ -840,7 +869,7 @@ section { position: relative; }
      breakpoint above, since nav-cta stopped fitting well before phone
      widths. Sign In / logged-in menu stays in the top bar at all times —
      never buried in the hamburger. */
-  .pillars, .program-grid, .why-grid, .fit-grid, .form-grid-2, .job-grid, .cat-grid, .value-grid, .belief-list { grid-template-columns: 1fr; }
+  .pillars, .program-grid, .why-grid, .fit-grid, .form-grid-2, .job-grid, .cat-grid, .value-grid, .belief-list, .webinar-grid { grid-template-columns: 1fr; }
   .info-row { grid-template-columns: 1fr; gap: 6px; }
   .section { padding: 64px 0; }
   .hero { padding: 116px 0 60px; }

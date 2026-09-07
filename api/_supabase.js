@@ -221,6 +221,27 @@ async function insertNewsletterSubscriber(email) {
   }
 }
 
+// Brief #27 — webinar registrations. No RLS insert policy on purpose,
+// same reasoning as insertNewsletterSubscriber above: only ever written
+// via api/register-webinar.js, never directly from the browser.
+async function insertWebinarRegistration(fields) {
+  const key = requireServiceRoleKey();
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/webinar_registrations`, {
+    method: "POST",
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal",
+    },
+    body: JSON.stringify(fields),
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Supabase insert failed (${res.status}): ${text}`);
+  }
+}
+
 module.exports = {
   getUserFromAccessToken,
   upsertEnrollment,
@@ -231,4 +252,5 @@ module.exports = {
   getEnrollmentsNeedingReminders,
   updateEnrollmentById,
   insertNewsletterSubscriber,
+  insertWebinarRegistration,
 };
