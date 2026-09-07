@@ -11,6 +11,16 @@
 // at render time (never stored), the same pattern already used for
 // cohort status in my-account.html. `subtitle` is optional; `description`
 // can be a single string or an array of paragraph strings.
+//
+// Short flyer URL convention — each event also gets a clean, short URL
+// for print/social (e.g. oistrideacademy.com/masterclass-sept-2026)
+// that redirects to its webinar.html?slug=... page. Naming pattern:
+// masterclass-[month]-[year], lowercase 3-letter month (sept, oct, jan,
+// ...). When adding a new event here, also add a matching entry to the
+// top-level "redirects" array in vercel.json, e.g.:
+//   { "source": "/masterclass-oct-2026",
+//     "destination": "/webinar.html?slug=your-new-slug",
+//     "permanent": false }
 window.WEBINARS = [
   {
     slug: "building-a-career-in-tech-and-ai",
