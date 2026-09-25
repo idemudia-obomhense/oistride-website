@@ -35,7 +35,9 @@ window.WEBINARS = [
     // Saturday, September 26, 2026, 3:00-5:00 PM WAT (WAT = UTC+1).
     startAt: "2026-09-26T14:00:00Z",
     endAt: "2026-09-26T16:00:00Z",
-    flyerImage: "assets/img/masterclass-sept-2026.jpg.png",
+    // Updated to the version including the 4 panelists (Elizabeth
+    // Olagunju, Israel Ayodele, Brightmac, Eunice Adediran).
+    flyerImage: "assets/img/webinar-flyer.png",
     meetLink: "https://meet.google.com/jzi-zdmc-ymi",
     recordingLink: null,
   },
